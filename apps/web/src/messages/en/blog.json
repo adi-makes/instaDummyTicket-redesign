@@ -1,0 +1,15 @@
+{
+  "blog": {
+    "title": "Blog",
+    "description": "Guides for dummy tickets, flight itineraries, onward travel proof, and visa documentation.",
+    "readMore": "Read more",
+    "readPost": "Read {title}",
+    "allCategories": "All",
+    "postCountOne": "{count} post in {category}",
+    "postCountOther": "{count} posts in {category}",
+    "emptyTitle": "No posts yet",
+    "emptyDescription": "Check back soon - new posts are on the way.",
+    "relatedPosts": "Related posts",
+    "tocTitle": "On this page"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "site": {
+    "fallbackBrand": "InstaDummyTicket",
+    "skipToContent": "Skip to main content"
+  },
+  "nav": {
+    "mainLabel": "Main navigation",
+    "home": "Home",
+    "blogs": "Blogs",
+    "faq": "FAQ",
+    "contactSupport": "Contact Support",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
+  },
+  "stickyCta": {
+    "tagline": "From $9 · Delivered in 5 min",
+    "bookNow": "Book now"
+  },
+  "footer": {
+    "brand": "InstaDummyTicket",
+    "disclaimer": "Disclaimer: We provide temporary flight reservations for visa applications and travel documentation only. They are not valid boarding tickets.",
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "faq": "FAQ",
+    "blogs": "Blogs",
+    "support": "Support",
+    "sslSecured": "SSL Secured",
+    "securePayment": "Secure Payment",
+    "privacyProtected": "Privacy Protected",
+    "legitimate": "100% Legitimate",
+    "trustBadges": "Trust badges",
+    "socialLinks": "Social links",
+    "copyright": "2026 InstaDummyTicket",
+    "rights": "All Rights Reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "refundPolicy": "Refund Policy",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "gmail": "Gmail"
+  },
+  "breadcrumbs": {
+    "label": "Breadcrumb",
+    "home": "Home",
+    "blog": "Blog",
+    "faq": "FAQ"
+  },
+  "aiSeo": {
+    "keyTakeaways": "Key Takeaways"
+  },
+  "draftMode": {
+    "banner": "Draft preview mode",
+    "exit": "exit preview"
+  },
+  "video": {
+    "play": "Play YouTube video",
+    "playWithTitle": "Play video: {title}",
+    "title": "YouTube video"
+  }
+}
