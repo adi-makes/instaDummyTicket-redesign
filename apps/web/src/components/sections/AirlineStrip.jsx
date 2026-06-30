@@ -2,22 +2,22 @@
 import Image from "next/image";
 
 const airlines = [
-  { name: "Emirates",           src: "/images/airlineLogos/optimized/Emirates_logo.png" },
-  { name: "Air India",          src: "/images/airlineLogos/optimized/air_india_logo.png" },
-  { name: "IndiGo",             src: "/images/airlineLogos/optimized/IndiGo_logo.png" },
-  { name: "flydubai",           src: "/images/airlineLogos/optimized/Flydubai_logo_dark.png" },
-  { name: "Air Arabia",         src: "/images/airlineLogos/optimized/Air_Arabia_logo.png" },
-  { name: "Qatar Airways",      src: "/images/airlineLogos/optimized/Qatar_Airways_Logo.png" },
-  { name: "Etihad Airways",     src: "/images/airlineLogos/optimized/etihad_logo.png" },
-  { name: "SpiceJet",           src: "/images/airlineLogos/optimized/spice_jet_logo.png" },
-  { name: "Lufthansa",          src: "/images/airlineLogos/optimized/lufthansa_logo.png" },
-  { name: "British Airways",    src: "/images/airlineLogos/optimized/British_Airways_logo.png" },
-  { name: "Singapore Airlines", src: "/images/airlineLogos/optimized/Singapore_Airlines_logo.png" },
-  { name: "Thai Airways",       src: "/images/airlineLogos/optimized/Thai_Airways_logo.png" },
-  { name: "Air France",         src: "/images/airlineLogos/optimized/Air_France_logo.png" },
-  { name: "Turkish Airlines",   src: "/images/airlineLogos/optimized/Turkish_Airlines_logo.png" },
-  { name: "Oman Air",           src: "/images/airlineLogos/optimized/Oman_Air_logo.png" },
-  { name: "SriLankan Airlines", src: "/images/airlineLogos/optimized/SriLankan_Airlines_logo.png" },
+  { name: "Emirates",           src: "/images/airlineLogos/Emirates_logo.png" },
+  { name: "Air India",          src: "/images/airlineLogos/air_india_logo.png" },
+  { name: "IndiGo",             src: "/images/airlineLogos/IndiGo_logo.png" },
+  { name: "flydubai",           src: "/images/airlineLogos/Flydubai_logo_dark.png" },
+  { name: "Air Arabia",         src: "/images/airlineLogos/Air_Arabia_logo.png" },
+  { name: "Qatar Airways",      src: "/images/airlineLogos/Qatar_Airways_Logo.png" },
+  { name: "Etihad Airways",     src: "/images/airlineLogos/etihad_logo.png" },
+  { name: "SpiceJet",           src: "/images/airlineLogos/spice_jet_logo.png" },
+  { name: "Lufthansa",          src: "/images/airlineLogos/lufthansa_logo.png" },
+  { name: "British Airways",    src: "/images/airlineLogos/British_Airways_logo.png" },
+  { name: "Singapore Airlines", src: "/images/airlineLogos/Singapore_Airlines_logo.png" },
+  { name: "Thai Airways",       src: "/images/airlineLogos/Thai_Airways_logo.png" },
+  { name: "Air France",         src: "/images/airlineLogos/Air_France_logo.png" },
+  { name: "Turkish Airlines",   src: "/images/airlineLogos/Turkish_Airlines_logo.png" },
+  { name: "Oman Air",           src: "/images/airlineLogos/Oman_Air_logo.png" },
+  { name: "SriLankan Airlines", src: "/images/airlineLogos/SriLankan_Airlines_logo.png" },
 ];
 
 const track = [...airlines, ...airlines];
@@ -40,14 +40,14 @@ export default function AirlineStrip() {
         <div className="animate-scroll whitespace-nowrap flex items-center w-max">
           {track.map((airline, idx) => (
             <div key={idx} className="flex items-center shrink-0">
-              <div className="flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity duration-300 px-8 md:px-10">
+              <div className="flex min-w-[7rem] items-center justify-center px-5 opacity-90 transition-opacity duration-300 hover:opacity-100 md:min-w-[9rem] md:px-10">
                 <Image
                   src={airline.src}
                   alt={airline.name}
                   width={160}
                   height={56}
                   loading="lazy"
-                  className="h-7 w-auto max-w-[170px] object-contain md:h-8 md:max-w-[150px]"
+                  className="h-7 w-auto max-w-[7rem] object-contain md:h-8 md:max-w-[150px]"
                 />
               </div>
               <div className="h-6 w-px shrink-0 bg-line md:h-8" aria-hidden="true" />

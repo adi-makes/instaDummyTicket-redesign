@@ -54,9 +54,9 @@ const AIRPORTS = [
 ];
 
 const trustMetrics = [
-  {value: "5 min", label: "Typical delivery"},
-  {value: "14k+", label: "Reservations issued"},
-  {value: "4.9/5", label: "Traveler rating"},
+  {value: "5 min", label: "Delivery"},
+  {value: "14k+", label: "Reservations"},
+  {value: "4.9/5", label: "Rating"},
 ];
 
 function TrustMetrics({className = ""}) {
@@ -173,16 +173,19 @@ function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlig
                   </span>
 
                   <span className="block min-w-0 sm:hidden">
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center bg-slate-200 px-1.5 py-0.5 font-mono text-sm font-black leading-4 tracking-[0.01em] text-[color:var(--color-text-on-card)] sm:font-extrabold sm:tracking-[0]">
+                    <span className="flex min-w-0 items-baseline gap-2">
+                      <span className="inline-flex shrink-0 items-center rounded-[3px] border border-[color:var(--color-line)] px-1 py-px font-mono text-xs font-semibold leading-4 text-[color:var(--color-muted)]">
                         {airport.code}
                       </span>
-                      <span className="min-w-0 break-words text-[15px] font-extrabold leading-5 text-[color:var(--color-text-on-card)]">
-                        {airport.name}
+                      <span className="min-w-0 truncate text-sm font-medium leading-5 text-[color:var(--color-ink)]">
+                        {airport.city}
                       </span>
                     </span>
-                    <span className="mt-1 block break-words text-[13px] font-semibold leading-5 text-[color:var(--color-muted)]">
-                      {airport.city}, {airport.country}
+                    <span className="mt-0.5 block text-xs font-normal leading-5 text-[color:var(--color-muted)]">
+                      {airport.name}
+                    </span>
+                    <span className="block truncate text-xs font-normal leading-5 text-[color:var(--color-subtle)]">
+                      {airport.country}
                     </span>
                   </span>
                 </span>
@@ -585,7 +588,7 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
           className={
             isFormOnly
               ? ""
-              : "mt-4 grid w-full min-w-0 grid-cols-1 gap-4 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(500px,0.82fr)] lg:items-center lg:gap-14"
+              : "mt-4 grid w-full min-w-0 grid-cols-1 gap-4 sm:mt-8 sm:gap-8 lg:mt-0 lg:grid-cols-[minmax(0,0.95fr)_minmax(500px,0.82fr)] lg:items-center lg:gap-14"
           }
         >
         {!isFormOnly ? (

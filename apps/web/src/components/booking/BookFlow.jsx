@@ -273,10 +273,11 @@ function FlightCard({option, search, onSelect, isSelected}) {
     <button
       type="button"
       onClick={onSelect}
+      data-selected={isSelected ? "true" : undefined}
       className={[
-        "booking-surface-soft block w-full overflow-hidden text-left text-[color:var(--color-text-on-card)] transition hover:-translate-y-0.5 hover:border-[color:var(--color-accent)]",
-        isSelected ? "border-[color:var(--color-accent)] ring-4 ring-[color:var(--color-accent-soft)]" : "",
+        "flight-option-card booking-surface-soft block w-full overflow-hidden text-left text-[color:var(--color-text-on-card)] transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--color-accent)]",
       ].join(" ")}
+      aria-pressed={isSelected}
     >
       <span className="block">
         <Segment label="Onward" flight={option.onward} airline={option.airline} logo={option.logo} date={formatDate(search.departure)} code={option.code} />
@@ -840,7 +841,7 @@ export default function BookFlow() {
             advanceTimerRef.current = window.setTimeout(() => {
               setStep(3);
               advanceTimerRef.current = null;
-            }, 220);
+            }, 850);
           }}
         />
         )

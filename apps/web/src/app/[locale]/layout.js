@@ -22,8 +22,8 @@ export default async function LocaleLayout({children, params}) {
   const messages = getMessages(locale)
 
   return (
-    <html lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'} className={inter.variable}>
-      <body>
+    <html lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'} className={inter.variable} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Navbar locale={locale} messages={messages} />
         <main id="main-content">{children}</main>
         <Footer locale={locale} messages={messages} />
