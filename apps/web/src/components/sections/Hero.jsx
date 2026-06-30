@@ -611,17 +611,17 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               Real airline reservations with live, verifiable PNRs accepted by embassies worldwide. No risk, no wasted money.
             </p>
 
-            <div className="mx-auto mt-6 grid max-w-[32rem] grid-cols-3 gap-2 sm:mt-8 sm:gap-4 lg:mx-0 lg:mt-10">
+            <div className="mx-auto mt-5 grid max-w-[32rem] grid-cols-3 gap-2 sm:mt-8 sm:gap-4 lg:mx-0 lg:mt-10">
               {heroFeatureCards.map(({title, subtitle, icon: Icon}) => (
-                <div key={title} className="flex min-w-0 flex-col items-center gap-1 text-center lg:flex-row lg:gap-3 lg:text-left">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center text-[color:var(--color-accent)] lg:h-8 lg:w-8">
-                    <Icon size={24} strokeWidth={2.2} aria-hidden="true" className="lg:h-[26px] lg:w-[26px]" />
+                <div key={title} className="flex min-w-0 flex-col items-center gap-0.5 text-center lg:flex-row lg:gap-3 lg:text-left">
+                  <span className="grid h-6 w-6 shrink-0 place-items-center text-[color:var(--color-accent)] lg:h-8 lg:w-8">
+                    <Icon size={21} strokeWidth={2.2} aria-hidden="true" className="lg:h-[26px] lg:w-[26px]" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block font-body text-[12px] font-bold leading-4 text-[color:var(--color-ink)] sm:text-sm sm:leading-5 lg:text-base">
+                    <span className="block font-body text-[11px] font-bold leading-4 text-[color:var(--color-ink)] sm:text-sm sm:leading-5 lg:text-base">
                       {title}
                     </span>
-                    <span className="mt-0.5 block font-body text-[12px] font-normal leading-4 text-[color:var(--color-muted)] sm:text-sm sm:leading-5 lg:mt-1 lg:text-base">
+                    <span className="block font-body text-[11px] font-normal leading-4 text-[color:var(--color-muted)] sm:text-sm sm:leading-5 lg:mt-1 lg:text-base">
                       {subtitle}
                     </span>
                   </span>
@@ -867,7 +867,7 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
           </div>
 
           {!isFormOnly ? (
-            <div className="mx-auto mt-5 flex w-full max-w-[23rem] flex-col items-center border-t border-[color:var(--color-line)] pt-4 lg:hidden">
+            <div className="mx-auto mt-6 flex w-full max-w-[23rem] flex-col items-center border-t border-[color:var(--color-line)] pt-5 lg:hidden">
               <div className="flex items-center justify-center gap-4">
                 <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
                   {Array.from({length: 5}).map((_, index) => (
