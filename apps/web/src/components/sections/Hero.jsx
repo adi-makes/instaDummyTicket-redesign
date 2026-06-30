@@ -8,13 +8,13 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  ArrowRightLeft,
   Landmark,
   PlaneLanding,
   PlaneTakeoff,
   ShieldCheck,
   Star,
   TicketCheck,
+  Zap,
   X,
 } from "lucide-react";
 import {localizedPath} from "@/i18n/routing";
@@ -360,7 +360,7 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
           ? `max-h-[90vh] overflow-y-auto rounded-t-[var(--radius-control)] border-0 bg-white pb-20 transition-transform duration-300 ease-out ${
               popupVisible && !popupClosing ? "translate-y-0" : "translate-y-full"
             }`
-          : "w-[320px] rounded-[var(--radius-form-card)] border border-[color:var(--color-border-card)] bg-white p-5"
+          : "w-[320px] rounded-[var(--radius-control)] border border-[color:var(--color-border-card)] bg-white p-5"
       }
     >
       {isMobilePopup ? (
@@ -528,7 +528,6 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
   const [toast, setToast] = useState(null);
 
   const minReturn = departure ? new Date(departure.getTime() + 2 * 24 * 60 * 60 * 1000) : TODAY;
-  const travelDays = departure && returnDate ? Math.max(1, Math.round((returnDate - departure) / 86400000)) : null;
 
   useEffect(() => {
     if (!toast) return undefined;
@@ -543,12 +542,6 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
     if (!departure) next.departure = "Please select a date";
     if (tripType === "round" && !returnDate) next.returnDate = "Please select a return date";
     return next;
-  }
-
-  function swapFromTo() {
-    setFrom(to);
-    setTo(from);
-    setErrors((current) => ({...current, from: undefined, to: undefined}));
   }
 
   function handleSearch(event) {
@@ -603,46 +596,61 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
             </p>
 
             <h1 className="mx-auto max-w-[15em] break-words font-display text-[36px] font-bold leading-[1.05] text-[color:var(--color-ink)] sm:text-[48px] sm:leading-[1.08] lg:mx-0">
-              <span className="text-[color:var(--color-accent)]">Verified</span>{" "}
-              <span>flight reservations.</span>
+              <span className="text-[color:var(--color-accent)]">Flight Reservations</span>{" "}
+              <span>For Visa Applications In Minutes</span>
             </h1>
 
             <p className="mx-auto mt-4 max-w-[21rem] text-[16px] font-normal leading-6 text-[color:var(--color-muted)] sm:mt-6 sm:max-w-[36rem] sm:text-[18px] sm:leading-8 lg:mx-0">
-              Real airline reservations with live, verifiable PNRs accepted by embassies worldwide. No risk, no wasted money.
+              Live airline reservations with verifiable PNRs accepted for visa applications by embassies worldwide. Delivered in minutes.
             </p>
 
-            <div className="mx-auto mt-5 grid max-w-[32rem] grid-cols-3 gap-2 sm:mt-8 sm:gap-4 lg:mx-0 lg:mt-10">
-              {heroFeatureCards.map(({title, subtitle, icon: Icon}) => (
-                <div key={title} className="flex min-w-0 flex-col items-center gap-0.5 text-center lg:flex-row lg:gap-3 lg:text-left">
-                  <span className="grid h-6 w-6 shrink-0 place-items-center text-[color:var(--color-accent)] lg:h-8 lg:w-8">
-                    <Icon size={21} strokeWidth={2.2} aria-hidden="true" className="lg:h-[26px] lg:w-[26px]" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block font-body text-[11px] font-bold leading-4 text-[color:var(--color-ink)] sm:text-sm sm:leading-5 lg:text-base">
-                      {title}
-                    </span>
-                    <span className="block font-body text-[11px] font-normal leading-4 text-[color:var(--color-muted)] sm:text-sm sm:leading-5 lg:mt-1 lg:text-base">
-                      {subtitle}
-                    </span>
-                  </span>
-                </div>
-              ))}
+            <div className="mx-auto mt-4 w-full max-w-[21rem] lg:hidden">
+              <div className="flex items-center justify-center gap-3">
+                <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
+                  {Array.from({length: 5}).map((_, index) => (
+                    <Star key={index} size={15} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+                  ))}
+                </span>
+                <span className="font-body text-lg font-bold leading-none text-[color:var(--color-accent)]">
+                  4.9/5
+                </span>
+              </div>
+              <div className="mt-3 grid gap-2 font-body text-sm font-normal leading-5 text-[color:var(--color-muted)]">
+                {[
+                  {text: "14,000+ reservations delivered", icon: TicketCheck},
+                  {text: "5-minute delivery", icon: Zap},
+                  {text: "Embassy accepted worldwide", icon: ShieldCheck},
+                ].map(({text, icon: Icon}) => (
+                  <div key={text} className="flex items-center justify-center gap-2">
+                    <Icon size={16} strokeWidth={2} className="shrink-0 text-[color:var(--color-accent)]" aria-hidden="true" />
+                    <span>{text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mx-auto mt-8 hidden max-w-[32rem] border-t border-[color:var(--color-line)] pt-5 lg:mx-0 lg:block">
               <div className="flex max-w-full flex-wrap items-center justify-center gap-x-5 gap-y-2">
-              <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
-                {Array.from({length: 5}).map((_, index) => (
-                  <Star key={index} size={18} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+                <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
+                  {Array.from({length: 5}).map((_, index) => (
+                    <Star key={index} size={18} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+                  ))}
+                </span>
+                <span className="font-body text-xl font-bold leading-none text-[color:var(--color-accent)]">
+                  4.9/5
+                </span>
+              </div>
+              <div className="mt-4 flex max-w-full flex-wrap items-center justify-center gap-x-5 gap-y-2 font-body text-sm font-normal leading-5 text-[color:var(--color-muted)]">
+                {[
+                  {text: "14,000+ reservations delivered", icon: TicketCheck},
+                  {text: "5-minute delivery", icon: Zap},
+                  {text: "Embassy accepted worldwide", icon: ShieldCheck},
+                ].map(({text, icon: Icon}) => (
+                  <span key={text} className="inline-flex items-center gap-1.5">
+                    <Icon size={14} strokeWidth={2} className="shrink-0 text-[color:var(--color-accent)]" aria-hidden="true" />
+                    {text}
+                  </span>
                 ))}
-              </span>
-              <span className="font-body text-xl font-bold leading-none text-[color:var(--color-ink)]">
-                4.9/5
-              </span>
-              <span className="text-[color:var(--color-subtle)]">.</span>
-              <span className="font-body text-base font-normal leading-none text-[color:var(--color-muted)]">
-                from 14,000+ customers
-              </span>
               </div>
             </div>
           </div>
@@ -680,7 +688,7 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               onSubmit={handleSearch}
               noValidate
               className={isFormOnly ? "bg-white p-3.5 sm:p-8" : "bg-white p-3.5 sm:p-5 lg:p-5"}
-              style={{borderRadius: "0 0 var(--radius-form-card) var(--radius-form-card)"}}
+              style={{borderRadius: "0 0 var(--radius-control) var(--radius-control)"}}
             >
               <div
                 role="radiogroup"
@@ -716,8 +724,8 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               <div
                 className={
                   isFormOnly
-                    ? "grid grid-cols-1 items-center gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
-                    : "grid grid-cols-1 items-center gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
+                    ? "grid grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:gap-4"
+                    : "grid grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:gap-4"
                 }
               >
                 <div
@@ -739,18 +747,6 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                     }}
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={swapFromTo}
-                  aria-label="Swap departure and destination"
-                  className={
-                    isFormOnly
-                      ? "hidden cursor-pointer items-center justify-center px-3 text-[color:var(--color-accent)] transition-opacity hover:opacity-70 sm:flex sm:px-4"
-                      : "hidden cursor-pointer items-center justify-center px-3 text-[color:var(--color-accent)] transition-opacity hover:opacity-70 sm:flex sm:px-4"
-                  }
-                >
-                  <ArrowRightLeft size={18} aria-hidden="true" />
-                </button>
                 <div
                   className="flight-field"
                   data-error={errors.to ? "true" : undefined}
@@ -775,12 +771,12 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               <div
                 className={
                   isFormOnly
-                    ? "mt-3 grid grid-cols-1 items-center gap-4 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
-                    : "mt-3 grid grid-cols-1 items-center gap-4 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
+                    ? "mt-3 grid grid-cols-1 items-center gap-4 sm:min-h-[3.5rem] sm:grid-cols-2 sm:gap-4"
+                    : "mt-3 grid grid-cols-1 items-center gap-4 sm:min-h-[3.5rem] sm:grid-cols-2 sm:gap-4"
                 }
               >
                 <div
-                  className={`flight-field ${!isFormOnly && tripType === "oneway" ? "sm:col-span-3" : ""}`}
+                  className={`flight-field ${tripType === "oneway" ? "sm:col-span-2" : ""}`}
                   data-error={errors.departure ? "true" : undefined}
                   onFocusCapture={() => setFocusedField("departure")}
                   onBlurCapture={() => setFocusedField((current) => current === "departure" ? null : current)}
@@ -802,30 +798,6 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                 {tripType === "round" ? (
                   <>
                     <div
-                      className={
-                        isFormOnly
-                          ? "grid min-h-5 w-full place-items-center self-stretch py-0 text-center text-[13px] font-medium leading-none text-[color:var(--color-text-muted-card)] sm:min-h-[3.5rem]"
-                          : "grid min-h-5 w-full place-items-center self-stretch py-0 text-center text-[13px] font-medium leading-none text-[color:var(--color-text-muted-card)] sm:min-h-[3.5rem]"
-                      }
-                    >
-                      <span
-                        className={
-                          travelDays
-                            ? "grid min-w-12 place-items-center gap-0.5 px-2 text-[color:var(--color-muted)] sm:gap-1"
-                            : "grid min-w-12 place-items-center px-2 text-[color:var(--color-text-muted-card)]"
-                        }
-                      >
-                        {travelDays ? (
-                          <>
-                            <span>{travelDays}</span>
-                            <span>days</span>
-                          </>
-                        ) : (
-                          "-"
-                        )}
-                      </span>
-                    </div>
-                    <div
                       className="flight-field"
                       data-error={errors.returnDate ? "true" : undefined}
                       onFocusCapture={() => setFocusedField("returnDate")}
@@ -844,11 +816,6 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                         minDate={minReturn}
                       />
                     </div>
-                    <div className="hidden" aria-hidden="true">
-                      <span className="bg-white px-2 text-[13px] font-medium leading-[1.45] text-[color:var(--color-text-muted-card)]">
-                        {departure && returnDate ? `${Math.max(1, Math.round((returnDate - departure) / 86400000))} days` : "—"}
-                      </span>
-                    </div>
                   </>
                 ) : (
                   null
@@ -858,7 +825,7 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               <button
                 type="submit"
                 className="btn-secondary mt-4 min-h-12 w-full px-6 py-3 text-[16px] font-semibold leading-none sm:py-4"
-                style={{backgroundColor: "var(--color-primary)", borderRadius: "var(--radius-control)"}}
+                style={{backgroundColor: "var(--color-accent)", borderRadius: "var(--radius-control)"}}
               >
                 <span>Get Flight Reservation</span>
               </button>
@@ -867,20 +834,22 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
           </div>
 
           {!isFormOnly ? (
-            <div className="mx-auto mt-6 flex w-full max-w-[23rem] flex-col items-center border-t border-[color:var(--color-line)] pt-5 lg:hidden">
-              <div className="flex items-center justify-center gap-4">
-                <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
-                  {Array.from({length: 5}).map((_, index) => (
-                    <Star key={index} size={18} fill="currentColor" strokeWidth={0} aria-hidden="true" />
-                  ))}
-                </span>
-                <span className="font-body text-xl font-bold leading-none text-[color:var(--color-ink)]">
-                  4.9/5
-                </span>
-              </div>
-              <span className="mt-2 text-center font-body text-base font-normal leading-6 text-[color:var(--color-muted)]">
-                from 14,000+ customers
-              </span>
+            <div className="mx-auto mt-5 grid w-full max-w-[23rem] grid-cols-3 gap-2 pt-1 lg:mt-6 lg:max-w-full lg:gap-6 lg:pt-0">
+              {heroFeatureCards.map(({title, subtitle, icon: Icon}) => (
+                <div key={title} className="flex min-w-0 flex-col items-center gap-0.5 text-center lg:flex-row lg:justify-center lg:gap-3 lg:text-left">
+                  <span className="grid h-6 w-6 shrink-0 place-items-center text-[color:var(--color-accent)] lg:h-8 lg:w-8">
+                    <Icon size={21} strokeWidth={2.2} aria-hidden="true" className="lg:h-[26px] lg:w-[26px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-body text-[11px] font-bold leading-4 text-[color:var(--color-ink)] lg:text-base lg:leading-5">
+                      {title}
+                    </span>
+                    <span className="block font-body text-[11px] font-normal leading-4 text-[color:var(--color-muted)] lg:mt-1 lg:text-base lg:leading-5">
+                      {subtitle}
+                    </span>
+                  </span>
+                </div>
+              ))}
             </div>
           ) : null}
         </div>

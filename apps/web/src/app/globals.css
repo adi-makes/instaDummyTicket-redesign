@@ -542,15 +542,13 @@ textarea {
   .flight-search-shell {
     position: relative;
     border: 1px solid var(--color-card-premium-border);
-    border-top: 4px solid var(--color-accent);
-    border-bottom: 4px solid var(--color-accent);
-    border-radius: var(--radius-form-card);
+    border-radius: var(--radius-control);
     background: var(--color-surface);
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
   }
 
   .flight-search-shell > form {
-    border-radius: 0 0 var(--radius-form-card) var(--radius-form-card) !important;
+    border-radius: 0 0 var(--radius-control) var(--radius-control) !important;
   }
 
   .trip-toggle {
@@ -572,8 +570,8 @@ textarea {
     left: 0.25rem;
     z-index: 0;
     width: calc(50% - 0.25rem);
-    border-radius: var(--radius-segment);
-    background: var(--color-accent);
+    border-radius: var(--radius-control);
+    background: var(--color-slate-800);
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -594,7 +592,7 @@ textarea {
 
   .trip-toggle__button[data-active="true"] {
     background: transparent;
-    border-radius: 2px;
+    border-radius: var(--radius-control);
     color: var(--color-text-on-accent);
     box-shadow: none;
   }
@@ -2458,9 +2456,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
     max-width: 100%;
     overflow: hidden !important;
     border: 1px solid #bfd0e7;
-    border-top: 4px solid var(--color-accent);
-    border-bottom: 4px solid var(--color-accent);
-    border-radius: var(--radius-form-card);
+    border-radius: var(--radius-control);
     background: var(--color-surface);
     box-sizing: border-box;
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
@@ -2497,9 +2493,9 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   }
 
   #hero h1 ~ p {
-    margin-top: 0.8rem;
+    margin-top: 0.65rem;
     font-size: 15px;
-    line-height: 22px;
+    line-height: 21px;
   }
 
   #hero .hero-form {
@@ -2530,13 +2526,13 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   }
 
   #hero .hero-eyebrow {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
     font-size: 11px;
     line-height: 16px;
   }
 
   #hero .hero-eyebrow + h1 + p + div {
-    margin-top: 1.15rem;
+    margin-top: 0.85rem;
   }
 
   #hero .hero-metrics-grid > div {
