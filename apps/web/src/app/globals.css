@@ -85,6 +85,7 @@
   --font-body: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-display: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-reference: var(--font-red-hat-display, "Red Hat Display"), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -101,11 +102,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Anchor links should land below the compact sticky navbar
+/* Anchor links should land below the sticky navbar
    instead of getting hidden behind it. */
 html {
+  --site-header-height: 64px;
+  --radius-form-card: 16px;
+  --radius-control: 8px;
+  --radius-button: 8px;
+  --radius-nav-action: 6px;
+  --radius-segment: 4px;
+  --radius-pill: 999px;
   font-size: 100%;
-  scroll-padding-top: 80px;
+  scroll-padding-top: var(--site-header-height);
 }
 
 h1,
@@ -247,7 +255,7 @@ textarea {
      desktop gutter. Keep this shared with the navbar so edges align. */
   .custom-mx,
   .container-max {
-    width: calc(100% - 3rem);
+    width: min(calc(100% - 3rem), 80rem);
     max-width: 80rem;
     margin-left: auto;
     margin-right: auto;
@@ -256,15 +264,15 @@ textarea {
   @media (min-width: 640px) {
     .custom-mx,
     .container-max {
-      width: calc(100% - 3rem);
+      width: min(calc(100% - 4rem), 80rem);
     }
   }
 
   @media (min-width: 1024px) {
-    .custom-mx,
-    .container-max {
-      width: calc(100% - 4rem);
-    }
+  .custom-mx,
+  .container-max {
+    width: min(calc(100% - 10rem), 80rem);
+  }
   }
 
   .content-max {
@@ -282,8 +290,12 @@ textarea {
     font-family: var(--font-body);
   }
 
-  .section-heading {
+  .font-reference {
     font-family: var(--font-heading);
+  }
+
+  .section-heading {
+    font-family: var(--font-reference);
     font-size: 30px;
     font-weight: 700;
     line-height: 36px;
@@ -321,7 +333,7 @@ textarea {
     font-weight: 600;
     line-height: 1;
     padding: 0.875rem 1.75rem;
-    border-radius: 12px;
+    border-radius: var(--radius-button);
     transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
@@ -347,7 +359,7 @@ textarea {
     font-weight: 600;
     line-height: 1;
     padding: 0.875rem 1.75rem;
-    border-radius: 12px;
+    border-radius: var(--radius-button);
     width: 100%;
     transition: background-color 0.2s ease, transform 0.2s ease;
   }
@@ -373,14 +385,14 @@ textarea {
     font-size: 16px;
     font-weight: 600;
     line-height: 1;
-    border-radius: 10px;
-    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
+    border-radius: var(--radius-button);
+    box-shadow: none;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .btn-secondary:hover {
     background-color: var(--color-accent-hover);
-    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.2);
+    box-shadow: none;
     transform: translateY(-1px);
   }
 
@@ -418,7 +430,7 @@ textarea {
     background-color: color-mix(in srgb, var(--color-brand-primary) 8%, transparent);
     border: 1px solid color-mix(in srgb, var(--color-brand-primary) 20%, transparent);
     color: var(--color-accent);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     padding: 0.5rem 1rem;
     font-size: 0.725rem;
     font-weight: 700;
@@ -432,7 +444,7 @@ textarea {
     background-color: color-mix(in srgb, var(--color-info) 8%, transparent);
     border: 1px solid color-mix(in srgb, var(--color-info) 20%, transparent);
     color: var(--color-pricing-action);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     padding: 0.5rem 1rem;
     font-size: 0.725rem;
     font-weight: 700;
@@ -446,7 +458,7 @@ textarea {
     background-color: transparent;
     border: 1px solid var(--color-border-dark);
     color: var(--color-text-muted-dark);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     padding: 0.4rem 0.9rem;
     font-size: 0.7rem;
     font-weight: 600;
@@ -456,14 +468,14 @@ textarea {
   .card-dark {
     background-color: var(--color-card-dark);
     border: 1px solid var(--color-border-dark);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     padding: 1.75rem;
   }
 
   .card-white {
     background-color: var(--color-card);
     color: var(--color-text-on-card);
-    border-radius: 18px;
+    border-radius: var(--radius-form-card);
     padding: 2rem;
     border: 1px solid color-mix(in srgb, var(--color-ink) 6%, transparent);
     box-shadow: none;
@@ -473,7 +485,7 @@ textarea {
     width: 100%;
     background: var(--color-card);
     border: 1px solid var(--color-border-card);
-    border-radius: 12px;
+    border-radius: var(--radius-control);
     padding: 0.7rem 0.9rem;
     font-size: 16px;
     font-weight: 500;
@@ -509,7 +521,7 @@ textarea {
     align-items: center;
     gap: 0.5rem;
     width: fit-content;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--color-brand-primary-border);
     background: var(--color-brand-primary-soft);
     color: var(--color-accent-hover);
@@ -522,16 +534,22 @@ textarea {
   .hero-kicker::before {
     width: 0.375rem;
     height: 0.375rem;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--color-accent);
     content: "";
   }
 
   .flight-search-shell {
+    position: relative;
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 20px;
+    border-top: 4px solid var(--color-accent);
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  .flight-search-shell > form {
+    border-radius: 0 0 var(--radius-form-card) var(--radius-form-card) !important;
   }
 
   .trip-toggle {
@@ -540,7 +558,7 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.25rem;
     border: 1px solid color-mix(in srgb, var(--color-accent) 18%, var(--color-slate-300));
-    border-radius: 999px;
+    border-radius: var(--radius-control);
     background: color-mix(in srgb, var(--color-slate-100) 72%, var(--color-surface));
     padding: 0.25rem;
     overflow: hidden;
@@ -553,7 +571,7 @@ textarea {
     left: 0.25rem;
     z-index: 0;
     width: calc(50% - 0.25rem);
-    border-radius: 999px;
+    border-radius: var(--radius-segment);
     background: var(--color-accent);
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -562,7 +580,7 @@ textarea {
     position: relative;
     z-index: 1;
     min-height: 2.25rem;
-    border-radius: 999px;
+    border-radius: var(--radius-control);
     color: var(--color-slate-600);
     font-size: 14px;
     font-weight: 500;
@@ -575,8 +593,13 @@ textarea {
 
   .trip-toggle__button[data-active="true"] {
     background: transparent;
+    border-radius: 2px;
     color: var(--color-text-on-accent);
     box-shadow: none;
+  }
+
+  .trip-toggle__button:not([data-active="true"]):hover {
+    color: var(--color-accent);
   }
 
   .flight-field {
@@ -585,8 +608,8 @@ textarea {
     min-width: 0;
     align-items: center;
     gap: 0.625rem;
-    border: 1px solid color-mix(in srgb, var(--color-slate-300) 88%, var(--color-accent));
-    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--color-slate-400) 78%, var(--color-accent));
+    border-radius: var(--radius-control);
     background: var(--color-surface);
     color: var(--color-muted);
     padding: 0.75rem 0.875rem;
@@ -596,7 +619,7 @@ textarea {
   }
 
   .flight-field:hover {
-    border-color: color-mix(in srgb, var(--color-slate-400) 72%, var(--color-accent));
+    border-color: color-mix(in srgb, var(--color-slate-500) 64%, var(--color-accent));
   }
 
   .flight-field:focus-within,
@@ -624,7 +647,7 @@ textarea {
     overflow: hidden;
     border: 1px solid #b7c8e0;
     border-bottom-width: 1px;
-    border-radius: 14px;
+    border-radius: var(--radius-control);
     background: var(--color-surface);
     box-shadow: inset 0 -1px 0 #b7c8e0;
     text-align: center;
@@ -667,7 +690,7 @@ textarea {
 
   .surface-panel {
     border: 1px solid var(--color-line);
-    border-radius: 16px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     box-shadow: none;
   }
@@ -679,14 +702,14 @@ textarea {
 
   .booking-surface {
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 10px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
   }
 
   .booking-surface-soft {
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 10px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.045);
   }
@@ -704,20 +727,26 @@ textarea {
     height: 3.5rem;
     width: 100%;
     border: 1px solid color-mix(in srgb, var(--color-slate-300) 88%, var(--color-accent));
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     background: var(--color-surface);
     padding-inline: 1rem;
     color: var(--color-muted);
+    font-family: var(--font-reference);
     font-size: 16px;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 24px;
+    letter-spacing: 0;
     outline: none;
     transition: border-color 150ms ease, box-shadow 150ms ease;
   }
 
   .booking-field::placeholder {
     color: var(--color-subtle);
+    font-family: var(--font-reference);
+    font-size: 16px;
     font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0;
   }
 
   .booking-field:focus {
@@ -788,7 +817,7 @@ textarea {
     align-items: flex-start;
     gap: 0.75rem;
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 16px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     padding: 1.125rem;
     color: var(--color-muted);
@@ -831,7 +860,7 @@ textarea {
   .cms-empty-state,
   .cms-faq-item {
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 16px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
   }
@@ -921,7 +950,7 @@ textarea {
     max-width: 52rem;
     margin: 0 auto;
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 16px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     padding: 1.5rem;
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
@@ -1095,7 +1124,7 @@ textarea {
   .blog-reference-card {
     overflow: hidden;
     border: 1px solid var(--color-card-premium-border);
-    border-radius: 10px;
+    border-radius: var(--radius-form-card);
     background: var(--color-surface);
     box-shadow: none;
   }
@@ -1741,9 +1770,10 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-  border-bottom: 1px solid var(--color-line-soft);
-  backdrop-filter: blur(16px);
+  background: var(--color-surface);
+  border-bottom: 0;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .mobile-navbar {
@@ -1752,9 +1782,9 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: calc(100% - 3rem);
+  width: min(calc(100% - 3rem), 80rem);
   max-width: 80rem;
-  height: 64px;
+  height: var(--site-header-height);
   margin-inline: auto;
   background: transparent;
 }
@@ -1781,7 +1811,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   color: var(--color-primary) !important;
   background: var(--color-surface-muted);
   border: 1px solid var(--color-line);
-  border-radius: 12px;
+  border-radius: var(--radius-control);
 }
 
 .mobile-navbar__toggle:hover {
@@ -1811,8 +1841,20 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
 }
 
 .desktop-navbar__link {
+  position: relative;
   min-height: 40px;
   padding-inline: 14px;
+}
+
+.desktop-navbar__link::after {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 1px;
+  height: 2px;
+  border-radius: 999px;
+  background: transparent;
+  content: "";
 }
 
 .desktop-navbar__link:hover,
@@ -1820,18 +1862,25 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   color: var(--color-accent);
 }
 
-.desktop-navbar__support {
-  min-height: 40px;
-  padding-inline: 20px;
+.desktop-navbar__link[data-active="true"]::after {
   background: var(--color-accent);
-  color: var(--color-text-on-accent);
-  border-radius: 12px;
+}
+
+.desktop-navbar__support {
+  position: relative;
+  min-height: 40px;
+  padding-inline: 18px;
+  color: var(--color-primary);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  background: transparent;
 }
 
 .desktop-navbar__support:hover {
-  background: var(--color-accent-hover);
-  color: var(--color-text-on-accent);
-  transform: translateY(-1px);
+  border-color: var(--color-accent);
+  background: transparent;
+  color: var(--color-accent);
+  transform: none;
 }
 
 .mobile-navbar__toggle-icon {
@@ -1968,7 +2017,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   justify-content: center;
   margin-top: 16px;
   border: 1px solid var(--color-primary);
-  border-radius: 12px;
+  border-radius: var(--radius-nav-action);
   color: var(--color-primary);
   font-size: 16px;
   font-weight: 600;
@@ -2064,7 +2113,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
 }
 
 .starter-page {
-  min-height: calc(100dvh - 64px);
+  min-height: calc(100dvh - var(--site-header-height));
   background: var(--color-surface);
 }
 
@@ -2226,8 +2275,19 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
 }
 
 @media (min-width: 1024px) {
+  html {
+    --site-header-height: 80px;
+  }
+
+  #hero > .hero-container {
+    min-height: 506px !important;
+    align-content: start;
+    padding-top: 1.5rem !important;
+    padding-bottom: 4rem !important;
+  }
+
   .mobile-navbar {
-    width: calc(100% - 4rem);
+    width: min(calc(100% - 10rem), 80rem);
   }
 
   .mobile-navbar__toggle {
@@ -2237,7 +2297,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   .desktop-navbar__links {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     justify-content: flex-end;
     margin-left: auto;
   }
@@ -2255,9 +2315,13 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
     min-height: 288px;
   }
 
+  #hero .flight-search-shell {
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.14);
+  }
+
   #hero h1 {
-    font-size: 60px;
-    line-height: 60px;
+    font-size: 40px;
+    line-height: 44px;
   }
 
   .hero-metrics-grid--desktop {
@@ -2268,6 +2332,13 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
 
   .hero-metrics-grid--mobile {
     display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  #hero h1 {
+    font-size: 48px;
+    line-height: 52px;
   }
 }
 
@@ -2284,7 +2355,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
 
   .mobile-navbar {
     width: calc(100% - 2rem);
-    height: 56px;
+    height: 52px;
   }
 
   .mobile-navbar__brand {
@@ -2295,6 +2366,8 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
     width: 36px;
     height: 36px;
     margin-right: 0;
+    background: transparent;
+    border-color: transparent;
   }
 
   .mobile-navbar__toggle-icon {
@@ -2339,7 +2412,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
     width: min(calc(100% - 2rem), 23rem);
     max-width: none;
     min-height: 0;
-    padding-top: 1.45rem;
+    padding-top: 0.35rem;
     padding-bottom: 0;
   }
 
@@ -2350,6 +2423,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   #hero > .hero-container > div {
     width: 100%;
     max-width: 100%;
+    gap: 0.65rem;
     overflow: visible;
   }
 
@@ -2380,15 +2454,18 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   #hero .flight-search-shell {
     width: 100%;
     max-width: 100%;
+    overflow: hidden !important;
     border: 1px solid #bfd0e7;
-    border-radius: 8px;
+    border-top: 4px solid var(--color-accent);
+    border-radius: var(--radius-form-card);
+    background: var(--color-surface);
     box-sizing: border-box;
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
   }
 
   #hero .flight-field {
     border: 1px solid #b7c8e0;
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     padding-block: 0.54rem;
   }
 
@@ -2397,7 +2474,7 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
     margin-top: 1.25rem;
     max-width: 100%;
     border-color: #b7c8e0;
-    border-radius: 14px;
+    border-radius: var(--radius-control);
     border-bottom-width: 1px;
     box-shadow: inset 0 -1px 0 #b7c8e0;
   }
@@ -2412,21 +2489,35 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
   }
 
   #hero h1 {
-    font-size: 36px;
-    line-height: 37.8px;
+    font-size: 34px;
+    line-height: 35px;
   }
 
   #hero h1 ~ p {
-    font-size: 16px;
-    line-height: 24px;
+    margin-top: 0.75rem;
+    font-size: 15px;
+    line-height: 22px;
   }
 
   #hero .hero-form {
-    margin-top: 0.35rem;
+    margin-top: -0.15rem;
   }
 
   #hero .flight-search-shell form {
-    padding: 0.8rem;
+    padding: 0.7rem;
+    border: 0;
+    border-radius: inherit !important;
+    box-shadow: none;
+  }
+
+  #hero .hero-eyebrow {
+    margin-bottom: 0.55rem;
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  #hero .hero-eyebrow + h1 + p + div {
+    margin-top: 1rem;
   }
 
   #hero .hero-metrics-grid > div {
@@ -2505,3 +2596,4 @@ html[data-scroll-reveal-ready="true"] [data-scroll-reveal].is-revealed > * {
     transition: none;
   }
 }
+

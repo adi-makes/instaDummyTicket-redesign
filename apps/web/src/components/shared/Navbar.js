@@ -45,7 +45,12 @@ export default function Navbar({locale, messages}) {
           {navItems.map((item) => {
             const active = isActivePath(pathname, item.href)
             return (
-              <Link key={item.href} className="desktop-navbar__link" data-active={active} href={item.href}>
+              <Link
+                key={item.href}
+                className="desktop-navbar__link"
+                data-active={active}
+                href={item.href}
+              >
                 {item.label}
               </Link>
             )

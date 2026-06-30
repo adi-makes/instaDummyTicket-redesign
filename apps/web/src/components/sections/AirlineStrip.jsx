@@ -25,15 +25,15 @@ const track = [...airlines, ...airlines];
 export default function AirlineStrip() {
   return (
     <section data-scroll-reveal className="airline-strip overflow-hidden border-t border-[color:var(--color-line-soft)] bg-white py-6 md:py-6">
-      <div className="mb-5 flex items-center justify-center gap-3 px-4 md:mb-6">
-        <span className="hidden h-px w-12 bg-gradient-to-r from-transparent to-accent-border sm:block sm:w-20" aria-hidden="true" />
-        <p className="eyebrow !mb-0 whitespace-nowrap">
+      <div className="mb-5 flex items-center justify-center gap-4 px-4 md:mb-6">
+        <span className="hidden h-px w-14 bg-gradient-to-r from-transparent to-[color:var(--color-line)] sm:block sm:w-24" aria-hidden="true" />
+        <p className="!mb-0 whitespace-nowrap font-body text-[13px] font-semibold uppercase leading-5 text-[color:var(--color-accent)]">
           Tickets issued on real airlines
         </p>
-        <span className="hidden h-px w-12 bg-gradient-to-l from-transparent to-accent-border sm:block sm:w-20" aria-hidden="true" />
+        <span className="hidden h-px w-14 bg-gradient-to-l from-transparent to-[color:var(--color-line)] sm:block sm:w-24" aria-hidden="true" />
       </div>
 
-      <div className="relative flex w-full overflow-hidden select-none">
+      <div className="container-max relative flex overflow-hidden select-none">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent md:w-24" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent md:w-24" />
 
@@ -56,7 +56,7 @@ export default function AirlineStrip() {
         </div>
       </div>
 
-      <p className="mx-auto mt-4 max-w-3xl px-4 text-center text-[13px] font-medium leading-[1.45] text-[color:var(--color-text-muted-card)] md:mt-6">
+      <p className="mx-auto mt-4 max-w-3xl px-4 text-center font-body text-[15px] font-normal leading-6 text-[color:var(--color-muted)] md:mt-6">
         <span>
           Every reservation comes with a verifiable PNR you can check directly on the airline&apos;s website.
         </span>

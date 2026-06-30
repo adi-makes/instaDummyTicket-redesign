@@ -9,8 +9,12 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRightLeft,
+  Landmark,
   PlaneLanding,
   PlaneTakeoff,
+  ShieldCheck,
+  Star,
+  TicketCheck,
   X,
 } from "lucide-react";
 import {localizedPath} from "@/i18n/routing";
@@ -53,23 +57,20 @@ const AIRPORTS = [
   {city: "Muscat", code: "MCT", name: "Muscat International Airport", country: "Oman", flag: "om"},
 ];
 
-const trustMetrics = [
-  {value: "5 min", label: "Delivery"},
-  {value: "14k+", label: "Reservations"},
-  {value: "4.9/5", label: "Rating"},
+const heroFeatureCards = [
+  {title: "Live PNR", subtitle: "Verifiable", icon: TicketCheck},
+  {title: "Embassy", subtitle: "Accepted", icon: Landmark},
+  {title: "Secure &", subtitle: "Trusted", icon: ShieldCheck},
 ];
 
-function TrustMetrics({className = ""}) {
-  return (
-    <div className={`hero-metrics-grid ${className}`}>
-      {trustMetrics.map(({value, label}, index) => (
-        <div key={label} className={index ? "border-l border-[color:var(--color-line)]" : ""}>
-          <p>{value}</p>
-          <span>{label}</span>
-        </div>
-      ))}
-    </div>
-  );
+function fieldBorderStyle(error, focused) {
+  return {
+    borderColor: error
+      ? "var(--color-danger)"
+      : focused
+        ? "var(--color-accent)"
+        : "var(--color-line)",
+  };
 }
 
 function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlign = "left"}) {
@@ -119,7 +120,8 @@ function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlig
           setTimeout(() => onBlur && onBlur(), 150);
         }}
         aria-label={label}
-        className="w-full bg-transparent pr-8 text-left text-[16px] font-normal leading-[1.4] text-[color:var(--color-muted)] outline-none placeholder:font-normal placeholder:text-[color:var(--color-subtle)]"
+        className="w-full bg-transparent pr-8 text-left text-base font-normal leading-6 tracking-normal text-[color:var(--color-muted)] outline-none placeholder:text-base placeholder:font-normal placeholder:leading-6 placeholder:tracking-normal placeholder:text-[color:var(--color-subtle)]"
+        style={{fontFamily: "var(--font-reference)"}}
       />
       {value ? (
         <button
@@ -142,7 +144,7 @@ function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlig
       {open && suggestions.length > 0 ? (
         <ul
           data-align={dropdownAlign}
-          className={`airport-suggestions absolute left-[-2.625rem] right-[-1rem] top-[calc(100%+1.125rem)] z-40 max-h-56 divide-y divide-[color:var(--color-line-soft)] overflow-y-auto overflow-x-hidden rounded-xl border border-[color:var(--color-border-card)] bg-white sm:max-h-[17rem] ${dropdownPositionClass}`}
+          className={`airport-suggestions absolute left-[-2.625rem] right-[-1rem] top-[calc(100%+1.125rem)] z-40 max-h-56 divide-y divide-[color:var(--color-line-soft)] overflow-y-auto overflow-x-hidden rounded-[var(--radius-control)] border border-[color:var(--color-border-card)] bg-white sm:max-h-[17rem] ${dropdownPositionClass}`}
         >
           {suggestions.map((airport) => (
             <li key={airport.code}>
@@ -215,6 +217,8 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
   const popupRef = useRef(null);
   const closeTimerRef = useRef(null);
   const closePickerRef = useRef(() => {});
+
+  const min = minDate instanceof Date ? minDate : TODAY;
 
   useEffect(() => {
     function handleOutside(event) {
@@ -314,7 +318,6 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
     setOpen(true);
   }
 
-  const min = minDate instanceof Date ? minDate : TODAY;
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
   const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleString("default", {month: "long"});
@@ -354,10 +357,10 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
       style={popupStyle}
       className={
         isMobilePopup
-          ? `max-h-[90vh] overflow-y-auto rounded-t-lg border-0 bg-white pb-20 transition-transform duration-300 ease-out ${
+          ? `max-h-[90vh] overflow-y-auto rounded-t-[var(--radius-control)] border-0 bg-white pb-20 transition-transform duration-300 ease-out ${
               popupVisible && !popupClosing ? "translate-y-0" : "translate-y-full"
             }`
-          : "w-[320px] rounded-2xl border border-[color:var(--color-border-card)] bg-white p-5"
+          : "w-[320px] rounded-[var(--radius-form-card)] border border-[color:var(--color-border-card)] bg-white p-5"
       }
     >
       {isMobilePopup ? (
@@ -424,15 +427,15 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
             const isSelected = value && cellDate.toDateString() === value.toDateString();
 
             let className = isMobilePopup
-              ? "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-lg font-normal transition-colors "
-              : "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors ";
+              ? "mx-auto flex h-8 w-8 items-center justify-center rounded-[var(--radius-nav-action)] text-lg font-normal transition-colors "
+              : "mx-auto flex h-8 w-8 items-center justify-center rounded-[var(--radius-nav-action)] text-sm transition-colors ";
 
             if (isPast) {
               className += "cursor-not-allowed text-slate-300";
             } else if (isSelected) {
               className += isMobilePopup
-                ? "cursor-pointer border-2 border-[color:var(--color-text-on-card)] font-normal text-[color:var(--color-text-on-card)]"
-                : "cursor-pointer bg-[color:var(--color-accent)] font-semibold text-[color:var(--color-text-on-accent)]";
+                ? "cursor-pointer border border-[color:var(--color-line)] bg-white font-normal text-[color:var(--color-slate-700)]"
+                : "cursor-pointer border border-[color:var(--color-line)] bg-white font-normal text-[color:var(--color-slate-700)]";
             } else if (isToday) {
               className += isMobilePopup
                 ? "cursor-pointer text-[color:var(--color-text-on-card)]"
@@ -482,9 +485,10 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
       <button
         type="button"
         onClick={handleToggle}
-        className={`flex w-full cursor-pointer items-center gap-2 bg-transparent pr-8 text-left text-[16px] font-normal leading-[1.4] outline-none ${
+        className={`flex w-full cursor-pointer items-center gap-2 bg-transparent pr-8 text-left text-base font-normal leading-6 tracking-normal outline-none ${
           display ? "text-[color:var(--color-muted)]" : "text-[color:var(--color-subtle)]"
         }`}
+        style={{fontFamily: "var(--font-reference)"}}
       >
         <CalendarDays size={16} className="shrink-0 text-[color:var(--color-text-muted-card)]" aria-hidden="true" />
         <span className="min-w-0 truncate">{display || label}</span>
@@ -519,6 +523,7 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
   const [to, setTo] = useState(initialData?.to || "");
   const [departure, setDeparture] = useState(initialData?.departure ? new Date(initialData.departure) : null);
   const [returnDate, setReturnDate] = useState(initialData?.returnDate ? new Date(initialData.returnDate) : null);
+  const [focusedField, setFocusedField] = useState(null);
   const [errors, setErrors] = useState({});
   const [toast, setToast] = useState(null);
 
@@ -581,36 +586,65 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
         className={`container-max hero-container min-w-0 ${
           isFormOnly
             ? "pb-0 pt-0"
-            : "grid content-center pb-5 pt-5 sm:py-12 lg:min-h-[640px] lg:py-16"
+            : "grid content-center pb-5 pt-5 sm:py-12 lg:min-h-[640px] lg:pb-16 lg:pt-20"
         }`}
       >
         <div
           className={
             isFormOnly
               ? ""
-              : "mt-4 grid w-full min-w-0 grid-cols-1 gap-4 sm:mt-8 sm:gap-8 lg:mt-0 lg:grid-cols-[minmax(0,0.95fr)_minmax(500px,0.82fr)] lg:items-center lg:gap-14"
+              : "mt-4 grid w-full min-w-0 grid-cols-1 gap-4 sm:mt-8 sm:gap-8 lg:mt-8 lg:grid-cols-2 lg:items-center lg:gap-16"
           }
         >
         {!isFormOnly ? (
           <div className="min-w-0 text-center lg:text-left">
-            <p className="hero-eyebrow mb-4 text-[13px] font-semibold uppercase leading-5 text-[color:var(--color-accent-hover)] sm:mb-6">
+            <p className="hero-eyebrow mb-3 text-[13px] font-semibold uppercase leading-5 text-[color:var(--color-accent)] sm:mb-7">
               Flight reservations for visa
             </p>
 
-            <h1 className="mx-auto max-w-[11em] break-words font-display text-[36px] font-bold leading-[1.05] text-[color:var(--color-ink)] sm:text-[60px] sm:leading-[1] lg:mx-0">
-              <span className="block">
-                Verified flight
-              </span>
-              <span className="block text-[color:var(--color-accent)]">
-                reservations.
-              </span>
+            <h1 className="mx-auto max-w-[15em] break-words font-display text-[36px] font-bold leading-[1.05] text-[color:var(--color-ink)] sm:text-[48px] sm:leading-[1.08] lg:mx-0">
+              <span className="text-[color:var(--color-accent)]">Verified</span>{" "}
+              <span>flight reservations.</span>
             </h1>
 
-            <p className="mx-auto mt-5 max-w-[21rem] text-[16px] font-normal leading-6 text-[color:var(--color-muted)] sm:mt-6 sm:max-w-[42rem] sm:text-[20px] sm:leading-8 lg:mx-0">
+            <p className="mx-auto mt-4 max-w-[21rem] text-[16px] font-normal leading-6 text-[color:var(--color-muted)] sm:mt-6 sm:max-w-[36rem] sm:text-[18px] sm:leading-8 lg:mx-0">
               Real airline reservations with live, verifiable PNRs accepted by embassies worldwide. No risk, no wasted money.
             </p>
 
-            <TrustMetrics className="hero-metrics-grid--desktop" />
+            <div className="mx-auto mt-6 grid max-w-[32rem] grid-cols-3 gap-2 sm:mt-8 sm:gap-4 lg:mx-0 lg:mt-10">
+              {heroFeatureCards.map(({title, subtitle, icon: Icon}) => (
+                <div key={title} className="flex min-w-0 flex-col items-center gap-1 text-center lg:flex-row lg:gap-3 lg:text-left">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center text-[color:var(--color-accent)] lg:h-8 lg:w-8">
+                    <Icon size={24} strokeWidth={2.2} aria-hidden="true" className="lg:h-[26px] lg:w-[26px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-body text-[12px] font-bold leading-4 text-[color:var(--color-ink)] sm:text-sm sm:leading-5 lg:text-base">
+                      {title}
+                    </span>
+                    <span className="mt-0.5 block font-body text-[12px] font-normal leading-4 text-[color:var(--color-muted)] sm:text-sm sm:leading-5 lg:mt-1 lg:text-base">
+                      {subtitle}
+                    </span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mx-auto mt-8 hidden max-w-[32rem] border-t border-[color:var(--color-line)] pt-5 lg:mx-0 lg:block">
+              <div className="flex max-w-full flex-wrap items-center justify-center gap-x-5 gap-y-2">
+              <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
+                {Array.from({length: 5}).map((_, index) => (
+                  <Star key={index} size={18} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+                ))}
+              </span>
+              <span className="font-body text-xl font-bold leading-none text-[color:var(--color-ink)]">
+                4.9/5
+              </span>
+              <span className="text-[color:var(--color-subtle)]">.</span>
+              <span className="font-body text-base font-normal leading-none text-[color:var(--color-muted)]">
+                from 14,000+ customers
+              </span>
+              </div>
+            </div>
           </div>
         ) : null}
 
@@ -618,25 +652,26 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
           className={
             isFormOnly
               ? "hero-form mx-auto min-w-0 w-full max-w-[23rem] justify-self-center sm:max-w-[700px]"
-              : "hero-form min-w-0 w-full max-w-full justify-self-center lg:ml-auto lg:max-w-[560px]"
+              : "hero-form min-w-0 w-full max-w-full justify-self-stretch lg:-mt-4"
           }
         >
           <div className="flight-search-shell min-w-0 overflow-visible">
             {isFormOnly ? (
-              <div className="hidden min-w-0 items-center justify-between gap-3 border-b border-[color:var(--color-line-soft)] px-5 py-3 text-[11px] font-bold uppercase leading-none text-[color:var(--color-muted)] sm:flex">
-                <span>Book a reservation</span>
-                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[color:var(--color-accent-soft)] px-2.5 py-1 text-[color:var(--color-accent-hover)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent)]" aria-hidden="true" />
-                  <span>Live PNR</span>
+              <div className="hidden min-w-0 items-center justify-between gap-3 px-4 pt-4 text-[11px] font-bold uppercase leading-none text-[color:var(--color-primary)] sm:flex sm:px-5">
+                <span className="flex min-h-7 items-center">Book a reservation</span>
+                <span className="flex items-center gap-1" aria-hidden="true">
+                  <span className="h-1.5 w-5 rounded-full bg-[color:var(--color-accent)]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-line)]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-line)]" />
                 </span>
               </div>
             ) : (
-              <div className="hidden min-w-0 items-center justify-between gap-3 border-b border-[color:var(--color-line-soft)] px-4 py-3 text-[11px] font-bold uppercase leading-none text-[color:var(--color-muted)] sm:flex sm:px-5">
-                <span>Book a reservation</span>
-                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[color:var(--color-accent-soft)] px-2.5 py-1 text-[color:var(--color-accent-hover)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent)]" aria-hidden="true" />
-                  <span className="sm:hidden">PNR</span>
-                  <span className="hidden sm:inline">Live PNR</span>
+              <div className="hidden min-w-0 items-center justify-between gap-3 px-4 pt-4 text-[11px] font-bold uppercase leading-none text-[color:var(--color-primary)] sm:flex sm:px-5">
+                <span className="flex min-h-7 items-center">Book a reservation</span>
+                <span className="flex items-center gap-1" aria-hidden="true">
+                  <span className="h-1.5 w-5 rounded-full bg-[color:var(--color-accent)]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-line)]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-line)]" />
                 </span>
               </div>
             )}
@@ -644,12 +679,13 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
             <form
               onSubmit={handleSearch}
               noValidate
-              className={isFormOnly ? "rounded-b-[20px] bg-white p-3.5 sm:p-8" : "rounded-b-[20px] bg-white p-3.5 sm:p-5 lg:p-6"}
+              className={isFormOnly ? "bg-white p-3.5 sm:p-8" : "bg-white p-3.5 sm:p-5 lg:p-5"}
+              style={{borderRadius: "0 0 var(--radius-form-card) var(--radius-form-card)"}}
             >
               <div
                 role="radiogroup"
                 aria-label="Trip type"
-                className="trip-toggle mb-3 sm:mb-5"
+                className="trip-toggle mb-4"
               >
                 <span
                   aria-hidden="true"
@@ -680,11 +716,17 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               <div
                 className={
                   isFormOnly
-                    ? "grid grid-cols-1 items-center gap-2.5 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
-                    : "grid grid-cols-1 items-center gap-2.5 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
+                    ? "grid grid-cols-1 items-center gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
+                    : "grid grid-cols-1 items-center gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
                 }
               >
-                <div className="flight-field" data-error={errors.from ? "true" : undefined}>
+                <div
+                  className="flight-field"
+                  data-error={errors.from ? "true" : undefined}
+                  onFocusCapture={() => setFocusedField("from")}
+                  onBlurCapture={() => setFocusedField((current) => current === "from" ? null : current)}
+                  style={fieldBorderStyle(errors.from, focusedField === "from")}
+                >
                   <PlaneTakeoff size={16} className="flight-field__icon" />
                   <AirportInput
                     label="Departure city"
@@ -709,7 +751,13 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                 >
                   <ArrowRightLeft size={18} aria-hidden="true" />
                 </button>
-                <div className="flight-field" data-error={errors.to ? "true" : undefined}>
+                <div
+                  className="flight-field"
+                  data-error={errors.to ? "true" : undefined}
+                  onFocusCapture={() => setFocusedField("to")}
+                  onBlurCapture={() => setFocusedField((current) => current === "to" ? null : current)}
+                  style={fieldBorderStyle(errors.to, focusedField === "to")}
+                >
                   <PlaneLanding size={16} className="flight-field__icon" />
                   <AirportInput
                     label="Destination"
@@ -727,13 +775,16 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               <div
                 className={
                   isFormOnly
-                    ? "mt-2.5 grid grid-cols-1 items-center gap-2.5 sm:mt-6 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
-                    : "mt-2.5 grid grid-cols-1 items-center gap-2.5 sm:mt-3 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
+                    ? "mt-3 grid grid-cols-1 items-center gap-4 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
+                    : "mt-3 grid grid-cols-1 items-center gap-4 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
                 }
               >
                 <div
                   className={`flight-field ${!isFormOnly && tripType === "oneway" ? "sm:col-span-3" : ""}`}
                   data-error={errors.departure ? "true" : undefined}
+                  onFocusCapture={() => setFocusedField("departure")}
+                  onBlurCapture={() => setFocusedField((current) => current === "departure" ? null : current)}
+                  style={fieldBorderStyle(errors.departure, focusedField === "departure")}
                 >
                   <DatePicker
                     label="Departure"
@@ -774,8 +825,15 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                         )}
                       </span>
                     </div>
-                    <div className="flight-field" data-error={errors.returnDate ? "true" : undefined}>
+                    <div
+                      className="flight-field"
+                      data-error={errors.returnDate ? "true" : undefined}
+                      onFocusCapture={() => setFocusedField("returnDate")}
+                      onBlurCapture={() => setFocusedField((current) => current === "returnDate" ? null : current)}
+                      style={fieldBorderStyle(errors.returnDate, focusedField === "returnDate")}
+                    >
                       <DatePicker
+                        key={`return-${minReturn.toISOString()}`}
                         label="Return"
                         align="right"
                         value={returnDate}
@@ -799,16 +857,31 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
 
               <button
                 type="submit"
-                className="btn-secondary mt-3 min-h-12 w-full px-6 py-3 text-[16px] font-semibold leading-none sm:mt-5 sm:py-4"
+                className="btn-secondary mt-4 min-h-12 w-full px-6 py-3 text-[16px] font-semibold leading-none sm:py-4"
+                style={{backgroundColor: "var(--color-primary)", borderRadius: "var(--radius-control)"}}
               >
-                <span>Search Flights</span>
+                <span>Get Flight Reservation</span>
               </button>
             </form>
 
           </div>
 
           {!isFormOnly ? (
-            <TrustMetrics className="hero-metrics-grid--mobile" />
+            <div className="mx-auto mt-5 flex w-full max-w-[23rem] flex-col items-center border-t border-[color:var(--color-line)] pt-4 lg:hidden">
+              <div className="flex items-center justify-center gap-4">
+                <span className="flex shrink-0 items-center gap-1 text-[#f59e0b]" aria-label="5 star rating">
+                  {Array.from({length: 5}).map((_, index) => (
+                    <Star key={index} size={18} fill="currentColor" strokeWidth={0} aria-hidden="true" />
+                  ))}
+                </span>
+                <span className="font-body text-xl font-bold leading-none text-[color:var(--color-ink)]">
+                  4.9/5
+                </span>
+              </div>
+              <span className="mt-2 text-center font-body text-base font-normal leading-6 text-[color:var(--color-muted)]">
+                from 14,000+ customers
+              </span>
+            </div>
           ) : null}
         </div>
         </div>
@@ -816,7 +889,7 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
 
       {toast && typeof window !== "undefined" ? createPortal(
         <div className="fixed right-5 top-5 z-[9999] max-w-sm animate-fade-in-up">
-          <div className="flex items-start gap-2 rounded-xl border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3">
+          <div className="flex items-start gap-2 rounded-[var(--radius-control)] border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3">
             <AlertCircle size={16} className="mt-0.5 shrink-0 text-[color:var(--color-warning)]" />
             <p className="flex-1 text-sm font-medium text-[color:var(--color-warning)]">{toast}</p>
             <button

@@ -235,10 +235,10 @@ function Segment({label, flight, airline, logo, date, code}) {
         <span className="flex h-5 w-12 shrink-0 items-center justify-start">
           <Image src={logo} alt="" width={48} height={18} className="h-auto max-h-5 w-auto max-w-12 object-contain" />
         </span>
-        <span className="min-w-0 truncate font-body text-sm font-semibold leading-none text-[color:var(--color-ink)]">
+        <span className="min-w-0 truncate font-reference text-sm font-semibold leading-5 tracking-normal text-[color:var(--color-ink)]">
           {airline}
         </span>
-        <span className="shrink-0 text-xs font-medium leading-none text-[color:var(--color-muted)]">{code}</span>
+        <span className="shrink-0 font-reference text-xs font-medium leading-5 tracking-normal text-[color:var(--color-muted)]">{code}</span>
         <span className="ml-auto shrink-0 rounded-full bg-[color:var(--color-accent-soft)] px-3 py-2 text-xs font-semibold uppercase leading-none text-[color:var(--color-accent-hover)]">
           {label}
         </span>
@@ -246,22 +246,22 @@ function Segment({label, flight, airline, logo, date, code}) {
 
       <div className="grid grid-cols-[minmax(0,1fr)_5rem_minmax(0,1fr)] items-start gap-2">
         <div className="min-w-0">
-          <p className="font-body text-[22px] font-bold leading-none text-[color:var(--color-ink)]">{flight.departTime}</p>
-          <p className="mt-2 font-body text-sm font-bold leading-none text-[color:var(--color-ink)]">{flight.fromCity}</p>
-          <p className="mt-1 text-sm font-medium leading-none text-[color:var(--color-muted)]">{flight.fromCode}</p>
-          <p className="mt-2 text-xs font-medium leading-none text-[color:var(--color-muted)]">{date}</p>
+          <p className="font-reference text-[22px] font-bold leading-none tracking-normal text-[color:var(--color-ink)]">{flight.departTime}</p>
+          <p className="mt-2 font-reference text-base font-normal leading-6 tracking-normal text-[color:var(--color-ink)]">{flight.fromCity}</p>
+          <p className="mt-1 font-reference text-base font-normal leading-6 tracking-normal text-[color:var(--color-muted)]">{flight.fromCode}</p>
+          <p className="mt-2 font-reference text-xs font-medium leading-5 tracking-normal text-[color:var(--color-muted)]">{date}</p>
         </div>
 
         <div className="grid justify-items-center pt-7 text-center">
           <Plane size={18} strokeWidth={2.4} className="mb-2 rotate-45 text-[color:var(--color-muted)]" aria-hidden="true" />
-          <span className="text-xs font-medium leading-none text-[color:var(--color-muted)]">{flight.duration}</span>
+          <span className="font-reference text-xs font-medium leading-5 tracking-normal text-[color:var(--color-muted)]">{flight.duration}</span>
         </div>
 
         <div className="min-w-0 text-right">
-          <p className="font-body text-[22px] font-bold leading-none text-[color:var(--color-ink)]">{flight.arriveTime}</p>
-          <p className="mt-2 font-body text-sm font-bold leading-none text-[color:var(--color-ink)]">{flight.toCity}</p>
-          <p className="mt-1 text-sm font-medium leading-none text-[color:var(--color-muted)]">{flight.toCode}</p>
-          <p className="mt-2 text-xs font-medium leading-none text-[color:var(--color-muted)]">{date}</p>
+          <p className="font-reference text-[22px] font-bold leading-none tracking-normal text-[color:var(--color-ink)]">{flight.arriveTime}</p>
+          <p className="mt-2 font-reference text-base font-normal leading-6 tracking-normal text-[color:var(--color-ink)]">{flight.toCity}</p>
+          <p className="mt-1 font-reference text-base font-normal leading-6 tracking-normal text-[color:var(--color-muted)]">{flight.toCode}</p>
+          <p className="mt-2 font-reference text-xs font-medium leading-5 tracking-normal text-[color:var(--color-muted)]">{date}</p>
         </div>
       </div>
     </div>
@@ -277,6 +277,7 @@ function FlightCard({option, search, onSelect, isSelected}) {
       className={[
         "flight-option-card booking-surface-soft block w-full overflow-hidden text-left text-[color:var(--color-text-on-card)] transition duration-200 hover:-translate-y-0.5 hover:border-[color:var(--color-accent)]",
       ].join(" ")}
+      style={{fontFamily: "var(--font-reference)"}}
       aria-pressed={isSelected}
     >
       <span className="block">
@@ -553,7 +554,7 @@ function OrderDetailsOverlay({flight, search, total, onClose}) {
                   <Tag size={17} aria-hidden="true" />
                   Apply Coupon Code
                 </div>
-                <button type="button" className="flex h-11 w-full items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-accent)] bg-white font-body text-sm font-semibold text-[color:var(--color-accent)] transition hover:bg-[color:var(--color-accent-soft)]">
+                <button type="button" className="flex h-11 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] border border-[color:var(--color-accent)] bg-white font-body text-sm font-semibold text-[color:var(--color-accent)] transition hover:bg-[color:var(--color-accent-soft)]">
                   <Tag size={16} aria-hidden="true" />
                   Apply Coupon Code
                 </button>
@@ -567,11 +568,11 @@ function OrderDetailsOverlay({flight, search, total, onClose}) {
           </div>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <div className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-card-premium-border)] bg-white px-3 text-sm font-semibold text-[color:var(--color-accent)]">
+            <div className="flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] border border-[color:var(--color-card-premium-border)] bg-white px-3 text-sm font-semibold text-[color:var(--color-accent)]">
               <ShieldCheck size={20} className="text-[color:var(--color-accent)]" aria-hidden="true" />
               Secure Payment
             </div>
-            <div className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-card-premium-border)] bg-white px-3 text-sm font-semibold text-[color:var(--color-accent)]">
+            <div className="flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-control)] border border-[color:var(--color-card-premium-border)] bg-white px-3 text-sm font-semibold text-[color:var(--color-accent)]">
               <LockKeyhole size={19} aria-hidden="true" />
               Stripe Verified
             </div>
@@ -722,7 +723,7 @@ function PassengerDetailsStep({flight, search}) {
 
       {toast && typeof window !== "undefined" ? createPortal(
         <div className="fixed right-5 top-5 z-[9999] max-w-sm animate-fade-in-up">
-          <div className="flex items-start gap-2 rounded-xl border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3">
+          <div className="flex items-start gap-2 rounded-[var(--radius-control)] border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3">
             <AlertCircle size={16} className="mt-0.5 shrink-0 text-[color:var(--color-warning)]" />
             <p className="flex-1 text-sm font-medium text-[color:var(--color-warning)]">{toast}</p>
             <button

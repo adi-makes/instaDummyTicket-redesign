@@ -1,5 +1,5 @@
 import '../globals.css'
-import {Inter} from 'next/font/google'
+import {Inter, Red_Hat_Display} from 'next/font/google'
 import Footer from '@/components/shared/Footer'
 import Navbar from '@/components/shared/Navbar'
 import {LOCALES} from '@/i18n/config'
@@ -9,6 +9,12 @@ import {getMessages} from '@/messages'
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+})
+
+const redHatDisplay = Red_Hat_Display({
+  subsets: ['latin'],
+  variable: '--font-red-hat-display',
   display: 'swap',
 })
 
@@ -22,7 +28,7 @@ export default async function LocaleLayout({children, params}) {
   const messages = getMessages(locale)
 
   return (
-    <html lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'} className={inter.variable} suppressHydrationWarning>
+    <html lang={locale} dir={isRtlLocale(locale) ? 'rtl' : 'ltr'} className={`${inter.variable} ${redHatDisplay.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Navbar locale={locale} messages={messages} />
         <main id="main-content">{children}</main>
