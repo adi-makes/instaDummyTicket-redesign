@@ -54,10 +54,23 @@ const AIRPORTS = [
 ];
 
 const trustMetrics = [
-  {value: "5 min", label: "typical delivery"},
-  {value: "14k+", label: "documents issued"},
-  {value: "4.9/5", label: "traveler rating"},
+  {value: "5 min", label: "Typical delivery"},
+  {value: "14k+", label: "Reservations issued"},
+  {value: "4.9/5", label: "Traveler rating"},
 ];
+
+function TrustMetrics({className = ""}) {
+  return (
+    <div className={`hero-metrics-grid ${className}`}>
+      {trustMetrics.map(({value, label}, index) => (
+        <div key={label} className={index ? "border-l border-[color:var(--color-line)]" : ""}>
+          <p>{value}</p>
+          <span>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlign = "left"}) {
   const [open, setOpen] = useState(false);
@@ -106,7 +119,7 @@ function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlig
           setTimeout(() => onBlur && onBlur(), 150);
         }}
         aria-label={label}
-        className="w-full bg-transparent pr-8 text-left text-[16px] font-medium leading-[1.4] text-[color:var(--color-text-on-card)] outline-none placeholder:font-medium placeholder:text-slate-300"
+        className="w-full bg-transparent pr-8 text-left text-[16px] font-normal leading-[1.4] text-[color:var(--color-muted)] outline-none placeholder:font-normal placeholder:text-[color:var(--color-subtle)]"
       />
       {value ? (
         <button
@@ -129,7 +142,7 @@ function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlig
       {open && suggestions.length > 0 ? (
         <ul
           data-align={dropdownAlign}
-          className={`airport-suggestions absolute left-[-2.625rem] right-[-1rem] top-[calc(100%+1.125rem)] z-40 max-h-56 divide-y divide-slate-100 overflow-y-auto overflow-x-hidden rounded-none border border-[color:var(--color-border-card)] bg-white shadow-none sm:max-h-[17rem] ${dropdownPositionClass}`}
+          className={`airport-suggestions absolute left-[-2.625rem] right-[-1rem] top-[calc(100%+1.125rem)] z-40 max-h-56 divide-y divide-[color:var(--color-line-soft)] overflow-y-auto overflow-x-hidden rounded-xl border border-[color:var(--color-border-card)] bg-white sm:max-h-[17rem] ${dropdownPositionClass}`}
         >
           {suggestions.map((airport) => (
             <li key={airport.code}>
@@ -161,7 +174,7 @@ function AirportInput({value, onChange, label, placeholder, onBlur, dropdownAlig
 
                   <span className="block min-w-0 sm:hidden">
                     <span className="flex min-w-0 items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center bg-slate-200 px-1.5 py-0.5 font-mono text-sm font-black leading-4 tracking-[0.01em] text-[color:var(--color-text-on-card)] [text-shadow:0_0_0_var(--color-text-on-card)] sm:font-extrabold sm:tracking-[0] sm:[text-shadow:none]">
+                      <span className="inline-flex shrink-0 items-center bg-slate-200 px-1.5 py-0.5 font-mono text-sm font-black leading-4 tracking-[0.01em] text-[color:var(--color-text-on-card)] sm:font-extrabold sm:tracking-[0]">
                         {airport.code}
                       </span>
                       <span className="min-w-0 break-words text-[15px] font-extrabold leading-5 text-[color:var(--color-text-on-card)]">
@@ -338,10 +351,10 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
       style={popupStyle}
       className={
         isMobilePopup
-          ? `max-h-[90vh] overflow-y-auto rounded-t-lg border-0 bg-white pb-20 shadow-xl transition-transform duration-300 ease-out ${
+          ? `max-h-[90vh] overflow-y-auto rounded-t-lg border-0 bg-white pb-20 transition-transform duration-300 ease-out ${
               popupVisible && !popupClosing ? "translate-y-0" : "translate-y-full"
             }`
-          : "w-[320px] rounded-2xl border border-[color:var(--color-border-card)] bg-white p-5 shadow-[0_8px_40px_rgba(0,0,0,0.18)]"
+          : "w-[320px] rounded-2xl border border-[color:var(--color-border-card)] bg-white p-5"
       }
     >
       {isMobilePopup ? (
@@ -466,8 +479,8 @@ function DatePicker({label, value, onChange, minDate, align = "left"}) {
       <button
         type="button"
         onClick={handleToggle}
-        className={`flex w-full cursor-pointer items-center gap-2 bg-transparent pr-8 text-left text-[16px] font-medium leading-[1.4] outline-none ${
-          display ? "text-[color:var(--color-text-on-card)]" : "font-normal text-slate-300"
+        className={`flex w-full cursor-pointer items-center gap-2 bg-transparent pr-8 text-left text-[16px] font-normal leading-[1.4] outline-none ${
+          display ? "text-[color:var(--color-muted)]" : "text-[color:var(--color-subtle)]"
         }`}
       >
         <CalendarDays size={16} className="shrink-0 text-[color:var(--color-text-muted-card)]" aria-hidden="true" />
@@ -557,40 +570,87 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
   }
 
   return (
-    <section id={isFormOnly ? undefined : "hero"} className={`relative overflow-hidden ${isFormOnly ? "bg-transparent" : "bg-[color:var(--color-surface)]"}`}>
-      <div className={`container-max grid min-w-0 grid-cols-1 justify-items-center gap-5 ${isFormOnly ? "pb-0 pt-0" : "pb-4 pt-8 sm:gap-8 sm:pb-8 sm:pt-12"}`}>
+    <section
+      id={isFormOnly ? undefined : "hero"}
+      className={`relative ${isFormOnly ? "overflow-visible bg-transparent" : "hero-shell overflow-hidden text-[color:var(--color-ink)]"}`}
+    >
+      <div
+        className={`container-max hero-container min-w-0 ${
+          isFormOnly
+            ? "pb-0 pt-0"
+            : "grid content-center pb-5 pt-5 sm:py-12 lg:min-h-[640px] lg:py-16"
+        }`}
+      >
+        <div
+          className={
+            isFormOnly
+              ? ""
+              : "mt-4 grid w-full min-w-0 grid-cols-1 gap-4 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(500px,0.82fr)] lg:items-center lg:gap-14"
+          }
+        >
         {!isFormOnly ? (
-          <div className="min-w-0 text-center">
-            <p className="eyebrow !mb-5 text-center">
-              FLIGHT RESERVATIONS FOR VISA
+          <div className="min-w-0 text-center lg:text-left">
+            <p className="hero-eyebrow mb-4 text-[13px] font-semibold uppercase leading-5 text-[color:var(--color-accent-hover)] sm:mb-6">
+              Flight reservations for visa
             </p>
 
-            <h1 className="mx-auto max-w-[10em] break-words text-center font-display text-[37px] font-bold leading-[1.1] text-[color:var(--color-ink)] sm:max-w-3xl">
-              <span className="block">BOOK a verified</span>
+            <h1 className="mx-auto max-w-[11em] break-words font-display text-[36px] font-bold leading-[1.05] text-[color:var(--color-ink)] sm:text-[60px] sm:leading-[1] lg:mx-0">
               <span className="block">
-                <span className="text-[color:var(--color-accent)]">reservation</span>.
+                Verified flight
+              </span>
+              <span className="block text-[color:var(--color-accent)]">
+                reservations.
               </span>
             </h1>
 
-            <span className="section-accent-line mx-auto mt-5 block" aria-hidden="true" />
-
-            <p className="mx-auto mt-5 max-w-[21rem] text-center text-[16px] font-normal leading-[1.65] text-[color:var(--color-muted)] sm:max-w-2xl">
-              A real, verified flight reservation with a live PNR accepted by embassies worldwide. No risk, no wasted money.
+            <p className="mx-auto mt-5 max-w-[21rem] text-[16px] font-normal leading-6 text-[color:var(--color-muted)] sm:mt-6 sm:max-w-[42rem] sm:text-[20px] sm:leading-8 lg:mx-0">
+              Real airline reservations with live, verifiable PNRs accepted by embassies worldwide. No risk, no wasted money.
             </p>
+
+            <TrustMetrics className="hero-metrics-grid--desktop" />
           </div>
         ) : null}
 
-        <div className="hero-form animate-fade-in-up-delayed min-w-0 w-full max-w-full sm:max-w-[560px]">
-          <div className="die-cut-ticket-border ticket-no-notch min-w-0 p-3 sm:p-8" style={{"--ticket-radius": "0", "--ticket-shadow": "none"}}>
-            <form onSubmit={handleSearch} noValidate>
+        <div
+          className={
+            isFormOnly
+              ? "hero-form mx-auto min-w-0 w-full max-w-[23rem] justify-self-center sm:max-w-[700px]"
+              : "hero-form min-w-0 w-full max-w-full justify-self-center lg:ml-auto lg:max-w-[560px]"
+          }
+        >
+          <div className="flight-search-shell min-w-0 overflow-visible">
+            {isFormOnly ? (
+              <div className="hidden min-w-0 items-center justify-between gap-3 border-b border-[color:var(--color-line-soft)] px-5 py-3 text-[11px] font-bold uppercase leading-none text-[color:var(--color-muted)] sm:flex">
+                <span>Book a reservation</span>
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[color:var(--color-accent-soft)] px-2.5 py-1 text-[color:var(--color-accent-hover)]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent)]" aria-hidden="true" />
+                  <span>Live PNR</span>
+                </span>
+              </div>
+            ) : (
+              <div className="hidden min-w-0 items-center justify-between gap-3 border-b border-[color:var(--color-line-soft)] px-4 py-3 text-[11px] font-bold uppercase leading-none text-[color:var(--color-muted)] sm:flex sm:px-5">
+                <span>Book a reservation</span>
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[color:var(--color-accent-soft)] px-2.5 py-1 text-[color:var(--color-accent-hover)]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent)]" aria-hidden="true" />
+                  <span className="sm:hidden">PNR</span>
+                  <span className="hidden sm:inline">Live PNR</span>
+                </span>
+              </div>
+            )}
+
+            <form
+              onSubmit={handleSearch}
+              noValidate
+              className={isFormOnly ? "rounded-b-[20px] bg-white p-3.5 sm:p-8" : "rounded-b-[20px] bg-white p-3.5 sm:p-5 lg:p-6"}
+            >
               <div
                 role="radiogroup"
                 aria-label="Trip type"
-                className="relative mb-4 flex w-full items-center bg-[color:var(--color-surface-muted)] p-1 sm:mb-8"
+                className="trip-toggle mb-3 sm:mb-5"
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute bottom-1 top-1 w-[calc(50%-0.25rem)] bg-[color:var(--color-brand-secondary)] transition-transform duration-300 ease-out"
+                  className="trip-toggle__slider"
                   style={{transform: tripType === "round" ? "translateX(100%)" : "translateX(0%)"}}
                 />
                 {[
@@ -605,11 +665,8 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                       role="radio"
                       aria-checked={active}
                       onClick={() => setTripType(key)}
-                      className={`relative z-10 flex-1 px-4 py-2 text-[14px] font-medium leading-[1.5] transition-colors duration-200 sm:py-2.5 ${
-                        active
-                          ? "text-[color:var(--color-text-on-accent)]"
-                          : "text-slate-600 hover:text-slate-900"
-                      }`}
+                      data-active={active}
+                      className="trip-toggle__button"
                     >
                       {label}
                     </button>
@@ -617,13 +674,15 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                 })}
               </div>
 
-              <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-[1fr_auto_1fr] sm:gap-0">
-                <div
-                  className={`relative flex min-w-0 items-center gap-2.5 rounded-[4px] border bg-white px-4 py-2.5 text-[color:var(--color-text-on-card)] shadow-none transition-colors focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 sm:py-3.5 [&:has([data-airport-open])]:z-50 [&:has([data-airport-open])]:border-slate-800 [&:has([data-airport-open])]:ring-1 [&:has([data-airport-open])]:ring-slate-800 ${
-                    errors.from ? "border-[color:var(--color-warning)] ring-1 ring-[color:var(--color-warning)] focus-within:border-[color:var(--color-warning)] focus-within:ring-[color:var(--color-warning)]" : "border-slate-300"
-                  }`}
-                >
-                  <PlaneTakeoff size={16} className="shrink-0 text-[color:var(--color-text-muted-card)]" />
+              <div
+                className={
+                  isFormOnly
+                    ? "grid grid-cols-1 items-center gap-2.5 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
+                    : "grid grid-cols-1 items-center gap-2.5 sm:grid-cols-[1fr_auto_1fr] sm:gap-0"
+                }
+              >
+                <div className="flight-field" data-error={errors.from ? "true" : undefined}>
+                  <PlaneTakeoff size={16} className="flight-field__icon" />
                   <AirportInput
                     label="Departure city"
                     placeholder="From where?"
@@ -639,16 +698,16 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                   type="button"
                   onClick={swapFromTo}
                   aria-label="Swap departure and destination"
-                  className="hidden cursor-pointer items-center justify-center px-3 text-[color:var(--color-accent)] transition-opacity hover:opacity-70 sm:flex sm:px-4"
+                  className={
+                    isFormOnly
+                      ? "hidden cursor-pointer items-center justify-center px-3 text-[color:var(--color-accent)] transition-opacity hover:opacity-70 sm:flex sm:px-4"
+                      : "hidden cursor-pointer items-center justify-center px-3 text-[color:var(--color-accent)] transition-opacity hover:opacity-70 sm:flex sm:px-4"
+                  }
                 >
                   <ArrowRightLeft size={18} aria-hidden="true" />
                 </button>
-                <div
-                  className={`relative flex min-w-0 items-center gap-2.5 rounded-[4px] border bg-white px-4 py-2.5 text-[color:var(--color-text-on-card)] shadow-none transition-colors focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 sm:py-3.5 [&:has([data-airport-open])]:z-50 [&:has([data-airport-open])]:border-slate-800 [&:has([data-airport-open])]:ring-1 [&:has([data-airport-open])]:ring-slate-800 ${
-                    errors.to ? "border-[color:var(--color-warning)] ring-1 ring-[color:var(--color-warning)] focus-within:border-[color:var(--color-warning)] focus-within:ring-[color:var(--color-warning)]" : "border-slate-300"
-                  }`}
-                >
-                  <PlaneLanding size={16} className="shrink-0 text-[color:var(--color-text-muted-card)]" />
+                <div className="flight-field" data-error={errors.to ? "true" : undefined}>
+                  <PlaneLanding size={16} className="flight-field__icon" />
                   <AirportInput
                     label="Destination"
                     placeholder="To where?"
@@ -663,14 +722,15 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
               </div>
 
               <div
-                className={`mt-3 grid items-center gap-3 sm:gap-0 ${
-                  tripType === "round" ? "grid-cols-1 sm:grid-cols-[minmax(0,1fr)_3.5rem_minmax(0,1fr)]" : "grid-cols-1"
-                }`}
+                className={
+                  isFormOnly
+                    ? "mt-2.5 grid grid-cols-1 items-center gap-2.5 sm:mt-6 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
+                    : "mt-2.5 grid grid-cols-1 items-center gap-2.5 sm:mt-3 sm:min-h-[3.5rem] sm:grid-cols-[minmax(0,1fr)_4rem_minmax(0,1fr)] sm:gap-0"
+                }
               >
                 <div
-                  className={`min-w-0 rounded-[4px] border bg-white px-4 py-2.5 text-[color:var(--color-text-on-card)] shadow-none transition-colors focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 sm:py-3.5 ${
-                    errors.departure ? "border-[color:var(--color-warning)] ring-1 ring-[color:var(--color-warning)] focus-within:border-[color:var(--color-warning)] focus-within:ring-[color:var(--color-warning)]" : "border-slate-300"
-                  }`}
+                  className={`flight-field ${!isFormOnly && tripType === "oneway" ? "sm:col-span-3" : ""}`}
+                  data-error={errors.departure ? "true" : undefined}
                 >
                   <DatePicker
                     label="Departure"
@@ -687,22 +747,31 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                 </div>
                 {tripType === "round" ? (
                   <>
-                    <div className="flex min-w-14 items-center justify-center text-[13px] font-medium leading-[1.45] text-[color:var(--color-text-muted-card)]">
+                    <div
+                      className={
+                        isFormOnly
+                          ? "grid min-h-5 w-full place-items-center self-stretch py-0 text-center text-[13px] font-medium leading-none text-[color:var(--color-text-muted-card)] sm:min-h-[3.5rem]"
+                          : "grid min-h-5 w-full place-items-center self-stretch py-0 text-center text-[13px] font-medium leading-none text-[color:var(--color-text-muted-card)] sm:min-h-[3.5rem]"
+                      }
+                    >
                       <span
                         className={
                           travelDays
-                            ? "inline-flex min-w-12 justify-center px-2 py-0.5 text-[color:var(--color-muted)]"
-                            : "inline-flex min-w-12 justify-center px-2 text-[color:var(--color-text-muted-card)]"
+                            ? "grid min-w-12 place-items-center gap-0.5 px-2 text-[color:var(--color-muted)] sm:gap-1"
+                            : "grid min-w-12 place-items-center px-2 text-[color:var(--color-text-muted-card)]"
                         }
                       >
-                        {travelDays ? `${travelDays} days` : "-"}
+                        {travelDays ? (
+                          <>
+                            <span>{travelDays}</span>
+                            <span>days</span>
+                          </>
+                        ) : (
+                          "-"
+                        )}
                       </span>
                     </div>
-                    <div
-                      className={`min-w-0 rounded-[4px] border bg-white px-4 py-2.5 text-[color:var(--color-text-on-card)] shadow-none transition-colors focus-within:border-slate-800 focus-within:ring-1 focus-within:ring-slate-800 sm:py-3.5 ${
-                        errors.returnDate ? "border-[color:var(--color-warning)] ring-1 ring-[color:var(--color-warning)] focus-within:border-[color:var(--color-warning)] focus-within:ring-[color:var(--color-warning)]" : "border-slate-300"
-                      }`}
-                    >
+                    <div className="flight-field" data-error={errors.returnDate ? "true" : undefined}>
                       <DatePicker
                         label="Return"
                         align="right"
@@ -720,41 +789,31 @@ export default function Hero({mode = "full", initialData = null, onComplete = nu
                       </span>
                     </div>
                   </>
-                ) : null}
+                ) : (
+                  null
+                )}
               </div>
 
               <button
                 type="submit"
-                className="btn-secondary mt-4 w-full px-6 py-3 text-[16px] font-semibold leading-none tracking-wide shadow-none sm:mt-6 sm:py-4"
+                className="btn-secondary mt-3 min-h-12 w-full px-6 py-3 text-[16px] font-semibold leading-none sm:mt-5 sm:py-4"
               >
-                Search Flights
+                <span>Search Flights</span>
               </button>
             </form>
+
           </div>
 
           {!isFormOnly ? (
-            <div className="mt-4 grid w-full grid-cols-3 overflow-hidden border border-[color:var(--color-line-soft)] bg-white text-center">
-              {trustMetrics.map((metric, index) => (
-                <div
-                  key={metric.label}
-                  className={["px-2 py-3", index ? "border-l border-[color:var(--color-line-soft)]" : ""].join(" ")}
-                >
-                  <p className="font-body text-[18px] font-semibold leading-[1.3] text-[color:var(--color-ink)]">
-                    {metric.value}
-                  </p>
-                  <p className="mt-1 text-[13px] font-medium leading-[1.45] text-[color:var(--color-text-muted-card)]">
-                    {metric.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <TrustMetrics className="hero-metrics-grid--mobile" />
           ) : null}
+        </div>
         </div>
       </div>
 
       {toast && typeof window !== "undefined" ? createPortal(
         <div className="fixed right-5 top-5 z-[9999] max-w-sm animate-fade-in-up">
-          <div className="flex items-start gap-2 rounded-xl border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+          <div className="flex items-start gap-2 rounded-xl border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3">
             <AlertCircle size={16} className="mt-0.5 shrink-0 text-[color:var(--color-warning)]" />
             <p className="flex-1 text-sm font-medium text-[color:var(--color-warning)]">{toast}</p>
             <button

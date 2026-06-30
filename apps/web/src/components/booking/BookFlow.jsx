@@ -2,7 +2,8 @@
 
 import {useEffect, useMemo, useRef, useState} from "react";
 import Image from "next/image";
-import {Check, ChevronLeft, ChevronUp, Clock3, LockKeyhole, Minus, Plane, Plus, ShieldCheck, Tag, X} from "lucide-react";
+import {createPortal} from "react-dom";
+import {AlertCircle, Check, ChevronLeft, ChevronUp, Clock3, LockKeyhole, Plane, ShieldCheck, Tag, X} from "lucide-react";
 import Hero from "@/components/sections/Hero";
 
 const STORAGE_KEY = "instaDummyTicket.bookingSearch";
@@ -109,12 +110,11 @@ function formatDate(value) {
   });
 }
 
-function passengerLabel(count, singular, plural) {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
-
 const EMAIL_DOMAIN_CORRECTIONS = {
   "gmai.com": "gmail.com",
+  "gamil.com": "gmail.com",
+  "gmail": "gmail.com",
+  "gmailcom": "gmail.com",
   "gmail.con": "gmail.com",
   "gmail.co": "gmail.com",
   "gmail.cm": "gmail.com",
@@ -123,13 +123,41 @@ const EMAIL_DOMAIN_CORRECTIONS = {
   "gnail.com": "gmail.com",
   "hotmial.com": "hotmail.com",
   "hotmai.com": "hotmail.com",
+  "hotmail": "hotmail.com",
+  "hotmailcom": "hotmail.com",
   "hotmail.con": "hotmail.com",
   "outlok.com": "outlook.com",
+  "outlook": "outlook.com",
+  "outlookcom": "outlook.com",
   "outlook.con": "outlook.com",
   "yaho.com": "yahoo.com",
+  "yhoo.com": "yahoo.com",
+  "yahoo": "yahoo.com",
+  "yahoocom": "yahoo.com",
   "yahoo.con": "yahoo.com",
   "yahho.com": "yahoo.com",
+  "iclod.com": "icloud.com",
+  "icloud": "icloud.com",
+  "icloudcom": "icloud.com",
 };
+
+const COMMON_EMAIL_DOMAINS = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com"];
+
+function editDistance(a, b) {
+  const previous = Array.from({length: b.length + 1}, (_, index) => index);
+
+  for (let i = 1; i <= a.length; i += 1) {
+    const current = [i];
+    for (let j = 1; j <= b.length; j += 1) {
+      current[j] = a[i - 1] === b[j - 1]
+        ? previous[j - 1]
+        : Math.min(previous[j - 1], previous[j], current[j - 1]) + 1;
+    }
+    previous.splice(0, previous.length, ...current);
+  }
+
+  return previous[b.length];
+}
 
 function getEmailSuggestion(email) {
   const trimmed = email.trim();
@@ -138,7 +166,13 @@ function getEmailSuggestion(email) {
 
   const local = trimmed.slice(0, atIndex);
   const domain = trimmed.slice(atIndex + 1).toLowerCase();
-  const correctedDomain = EMAIL_DOMAIN_CORRECTIONS[domain];
+  const normalizedDomain = domain.replace(/[^a-z0-9]/g, "");
+  const correctedDomain = EMAIL_DOMAIN_CORRECTIONS[domain] ||
+    EMAIL_DOMAIN_CORRECTIONS[normalizedDomain] ||
+    COMMON_EMAIL_DOMAINS.find((candidate) => {
+      const normalizedCandidate = candidate.replace(".", "");
+      return domain !== candidate && editDistance(normalizedDomain, normalizedCandidate) <= 2;
+    });
   if (!correctedDomain) return null;
 
   return `${local}@${correctedDomain}`;
@@ -148,12 +182,12 @@ function ProgressSteps({step, onBack}) {
   const items = [1, 2, 3];
 
   return (
-    <div className="border-b border-[color:var(--color-line-soft)] bg-[color:var(--color-surface)]">
+    <div className="border-b border-[color:var(--color-line-soft)] bg-[color:var(--color-surface)]/95 backdrop-blur">
       <div className="container-max relative flex h-16 items-center">
         <button
           type="button"
           onClick={onBack}
-          className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-surface-muted)] hover:text-[color:var(--color-primary)]"
+          className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-accent-soft)] hover:text-[color:var(--color-accent)]"
           aria-label="Go back"
         >
           <ChevronLeft size={22} aria-hidden="true" />
@@ -167,9 +201,9 @@ function ProgressSteps({step, onBack}) {
               <div key={item} className="flex items-center">
                 <span
                   className={[
-                    "grid h-8 w-8 place-items-center rounded-full text-sm font-bold",
+                    "grid h-8 w-8 place-items-center rounded-full text-sm font-semibold",
                     complete || active
-                      ? "bg-[color:var(--color-primary)] text-[color:var(--color-text-on-dark)]"
+                      ? "bg-[color:var(--color-accent)] text-[color:var(--color-text-on-accent)]"
                       : "bg-[color:var(--color-surface-muted)] text-[color:var(--color-subtle)]",
                   ].join(" ")}
                   aria-current={active ? "step" : undefined}
@@ -180,7 +214,7 @@ function ProgressSteps({step, onBack}) {
                   <span
                     className={[
                       "mx-3 h-0.5 w-12 sm:w-20",
-                      item < step ? "bg-[color:var(--color-primary)]" : "bg-[color:var(--color-line-soft)]",
+                      item < step ? "bg-[color:var(--color-accent)]" : "bg-[color:var(--color-line-soft)]",
                     ].join(" ")}
                     aria-hidden="true"
                   />
@@ -201,11 +235,11 @@ function Segment({label, flight, airline, logo, date, code}) {
         <span className="flex h-5 w-12 shrink-0 items-center justify-start">
           <Image src={logo} alt="" width={48} height={18} className="h-auto max-h-5 w-auto max-w-12 object-contain" />
         </span>
-        <span className="min-w-0 truncate font-body text-sm font-bold leading-none text-[color:var(--color-ink)]">
+        <span className="min-w-0 truncate font-body text-sm font-semibold leading-none text-[color:var(--color-ink)]">
           {airline}
         </span>
         <span className="shrink-0 text-xs font-medium leading-none text-[color:var(--color-muted)]">{code}</span>
-        <span className="ml-auto shrink-0 bg-[color:var(--color-surface-muted)] px-3 py-2 text-xs font-bold uppercase leading-none text-[color:var(--color-muted)]">
+        <span className="ml-auto shrink-0 rounded-full bg-[color:var(--color-accent-soft)] px-3 py-2 text-xs font-semibold uppercase leading-none text-[color:var(--color-accent-hover)]">
           {label}
         </span>
       </div>
@@ -240,8 +274,8 @@ function FlightCard({option, search, onSelect, isSelected}) {
       type="button"
       onClick={onSelect}
       className={[
-        "block w-full border bg-white text-left text-[color:var(--color-text-on-card)] transition-colors hover:border-[color:var(--color-primary)] hover:bg-[color:var(--color-surface)]",
-        isSelected ? "border-[color:var(--color-primary)]" : "border-[color:var(--color-line)]",
+        "booking-surface-soft block w-full overflow-hidden text-left text-[color:var(--color-text-on-card)] transition hover:-translate-y-0.5 hover:border-[color:var(--color-accent)]",
+        isSelected ? "border-[color:var(--color-accent)] ring-4 ring-[color:var(--color-accent-soft)]" : "",
       ].join(" ")}
     >
       <span className="block">
@@ -256,14 +290,14 @@ function FlightCard({option, search, onSelect, isSelected}) {
 
 function FlightList({search, onSelect, selectedFlightId}) {
   return (
-    <section className="container-max grid gap-6 py-8 sm:py-10">
-      <div className="mx-auto w-full max-w-[560px] text-left">
-        <h1 className="font-display text-3xl font-bold leading-tight text-[color:var(--color-ink)] sm:text-4xl">
+    <section className="container-max grid gap-6 py-8 sm:py-12">
+      <div className="mx-auto w-full max-w-[1120px] text-left">
+        <h1 className="booking-step-title">
           Select your flight
         </h1>
       </div>
 
-      <div className="mx-auto grid w-full max-w-[560px] gap-5">
+      <div className="mx-auto grid w-full max-w-[1120px] gap-5 lg:grid-cols-2">
         {flightOptions.map((option) => (
           <FlightCard
             key={option.id}
@@ -318,7 +352,7 @@ function LoadingSegmentSkeleton() {
 
 function LoadingFlightCard() {
   return (
-    <div className="w-full border border-[color:var(--color-line)] bg-white">
+    <div className="booking-surface-soft w-full overflow-hidden">
       <LoadingSegmentSkeleton />
       <LoadingSegmentSkeleton />
     </div>
@@ -328,13 +362,13 @@ function LoadingFlightCard() {
 function LoadingFlightList() {
   return (
     <section className="container-max grid gap-6 py-8 sm:py-10" aria-live="polite" aria-busy="true">
-      <div className="mx-auto w-full max-w-[560px] text-left">
-        <h1 className="font-display text-3xl font-bold leading-tight text-[color:var(--color-ink)] sm:text-4xl">
+      <div className="mx-auto w-full max-w-[1120px] text-left">
+        <h1 className="booking-step-title">
           Select your flight
         </h1>
       </div>
 
-      <div className="mx-auto grid w-full max-w-[560px] gap-5 animate-pulse">
+      <div className="mx-auto grid w-full max-w-[1120px] gap-5 animate-pulse lg:grid-cols-2">
         <LoadingFlightCard />
         <LoadingFlightCard />
       </div>
@@ -342,37 +376,10 @@ function LoadingFlightList() {
   );
 }
 
-function PassengerCounter({label, value, min = 0, onChange}) {
-  return (
-    <div className="mx-auto grid w-full max-w-[280px] grid-cols-[52px_minmax(0,1fr)_52px] border border-[color:var(--color-line)] bg-white">
-      <button
-        type="button"
-        onClick={() => onChange(Math.max(min, value - 1))}
-        disabled={value <= min}
-        className="grid h-10 place-items-center border-r border-[color:var(--color-line)] text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-surface-muted)] disabled:cursor-not-allowed disabled:opacity-35"
-        aria-label={`Decrease ${label}`}
-      >
-        <Minus size={18} strokeWidth={2.4} aria-hidden="true" />
-      </button>
-      <div className="grid h-10 place-items-center px-3 text-sm font-medium text-[color:var(--color-muted)]">
-        {label}
-      </div>
-      <button
-        type="button"
-        onClick={() => onChange(value + 1)}
-        className="grid h-10 place-items-center border-l border-[color:var(--color-line)] text-[color:var(--color-muted)] transition-colors hover:bg-[color:var(--color-surface-muted)]"
-        aria-label={`Increase ${label}`}
-      >
-        <Plus size={18} strokeWidth={2.4} aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
-
-function TextField({label, placeholder = "Peter", type = "text", value, onChange, children}) {
+function TextField({label, placeholder = "Peter", type = "text", value, onChange, error, children}) {
   return (
     <label className="block">
-      <span className="mb-3 block font-body text-base font-bold leading-tight text-[color:var(--color-ink)]">
+      <span className="mb-2 block font-body text-sm font-semibold leading-tight text-[color:var(--color-ink)]">
         {label}
       </span>
       <input
@@ -380,7 +387,12 @@ function TextField({label, placeholder = "Peter", type = "text", value, onChange
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="h-14 w-full border border-[color:var(--color-line)] bg-white px-5 text-base font-medium text-[color:var(--color-ink)] outline-none transition-colors placeholder:text-[color:var(--color-line)] focus:border-[color:var(--color-primary)]"
+        aria-invalid={error ? "true" : undefined}
+        className={[
+          "booking-field",
+          error ? "" : "",
+        ].join(" ")}
+        data-error={error ? "true" : undefined}
       />
       {children}
     </label>
@@ -389,16 +401,16 @@ function TextField({label, placeholder = "Peter", type = "text", value, onChange
 
 function ItinerarySummarySegment({label, flight, airline, logo, date, code}) {
   return (
-    <div className="border border-[color:var(--color-line)] bg-white px-4 py-4">
+    <div className="booking-surface-soft px-4 py-4">
       <div className="mb-5 flex min-w-0 items-center gap-2">
         <span className="flex h-5 w-12 shrink-0 items-center justify-start">
           <Image src={logo} alt="" width={48} height={18} className="h-auto max-h-5 w-auto max-w-12 object-contain" />
         </span>
-        <span className="min-w-0 truncate font-body text-sm font-bold leading-none text-[color:var(--color-ink)]">
+        <span className="min-w-0 truncate font-body text-sm font-semibold leading-none text-[color:var(--color-ink)]">
           {airline}
         </span>
         <span className="shrink-0 text-xs font-medium leading-none text-[color:var(--color-muted)]">{code}</span>
-        <span className="ml-auto shrink-0 bg-[color:var(--color-surface-muted)] px-3 py-2 text-xs font-bold uppercase leading-none text-[color:var(--color-muted)]">
+        <span className="ml-auto shrink-0 rounded-full bg-[color:var(--color-accent-soft)] px-3 py-2 text-xs font-semibold uppercase leading-none text-[color:var(--color-accent-hover)]">
           {label}
         </span>
       </div>
@@ -428,16 +440,16 @@ function ItinerarySummarySegment({label, flight, airline, logo, date, code}) {
 
 function OrderDetailsFlightSegment({label, flight, airline, logo, date, code}) {
   return (
-    <div className="border border-[color:var(--color-line)] bg-white px-4 py-4">
+    <div className="booking-surface-soft px-4 py-4">
       <div className="mb-5 flex min-w-0 items-center gap-2">
         <span className="flex h-5 w-12 shrink-0 items-center justify-start">
           <Image src={logo} alt="" width={48} height={18} className="h-auto max-h-5 w-auto max-w-12 object-contain" />
         </span>
-        <span className="min-w-0 truncate font-body text-sm font-bold leading-none text-[color:var(--color-ink)]">
+        <span className="min-w-0 truncate font-body text-sm font-semibold leading-none text-[color:var(--color-ink)]">
           {airline}
         </span>
         <span className="shrink-0 text-xs font-medium leading-none text-[color:var(--color-muted)]">{code}</span>
-        <span className="ml-auto shrink-0 bg-[color:var(--color-surface-muted)] px-3 py-2 text-xs font-bold uppercase leading-none text-[color:var(--color-muted)]">
+        <span className="ml-auto shrink-0 rounded-full bg-[color:var(--color-accent-soft)] px-3 py-2 text-xs font-semibold uppercase leading-none text-[color:var(--color-accent-hover)]">
           {label}
         </span>
       </div>
@@ -448,7 +460,7 @@ function OrderDetailsFlightSegment({label, flight, airline, logo, date, code}) {
           <p className="mt-3 font-body text-base font-bold leading-none text-[color:var(--color-ink)]">{flight.fromCode}</p>
         </div>
 
-        <div className="min-w-0 border border-[color:var(--color-line)] px-4 py-2 text-center">
+        <div className="min-w-0 rounded-[8px] border border-[color:var(--color-card-premium-border)] px-4 py-2 text-center">
           <p className="whitespace-nowrap text-xs font-bold leading-tight text-[color:var(--color-ink)]">{date}</p>
           <p className="mt-1 whitespace-nowrap text-xs font-semibold leading-tight text-[color:var(--color-muted)]">{flight.duration}</p>
         </div>
@@ -462,30 +474,29 @@ function OrderDetailsFlightSegment({label, flight, airline, logo, date, code}) {
   );
 }
 
-function OrderDetailsOverlay({flight, search, adults, childrenCount, total, onClose}) {
-  const travelerCount = adults + childrenCount;
-  const travelers = Array.from({length: travelerCount}, (_, index) => `Traveler ${index + 1}`);
+function OrderDetailsOverlay({flight, search, total, onClose}) {
+  const travelers = ["Traveler 1"];
   const tripLabel = search.tripType === "round" ? "Round Trip" : "One Way";
 
   return (
-    <div className="fixed inset-0 z-[70] overflow-y-auto bg-[color:var(--color-surface-muted)]">
+    <div className="fixed inset-0 z-[70] overflow-y-auto bg-[color:var(--color-surface)]">
       <div className="container-max min-h-dvh py-4">
         <div className="mx-auto w-full max-w-[560px]">
           <div className="mb-4 flex min-h-10 items-center justify-between gap-4">
-            <h1 className="font-display text-2xl font-bold leading-tight text-[color:var(--color-ink)]">
+            <h1 className="booking-step-title !text-2xl !leading-tight">
               Order Details
             </h1>
             <button
               type="button"
               onClick={onClose}
-              className="grid h-10 w-10 place-items-center text-[color:var(--color-primary)]"
+              className="grid h-10 w-10 place-items-center text-[color:var(--color-accent)]"
               aria-label="Close order details"
             >
               <X size={22} aria-hidden="true" />
             </button>
           </div>
 
-          <div className="border border-[color:var(--color-line)] bg-white">
+          <div className="booking-surface overflow-hidden">
             <div className="grid gap-3 p-4">
               <OrderDetailsFlightSegment
                 label="Onward"
@@ -511,7 +522,7 @@ function OrderDetailsOverlay({flight, search, adults, childrenCount, total, onCl
               <p className="text-[11px] font-bold uppercase leading-none text-[color:var(--color-subtle)]">Travelers</p>
               <div className="mt-4 grid gap-2">
                 {travelers.map((traveler) => (
-                  <p key={traveler} className="text-sm font-semibold leading-tight text-[color:var(--color-primary)]">
+                  <p key={traveler} className="text-sm font-semibold leading-tight text-[color:var(--color-accent)]">
                     {traveler}
                   </p>
                 ))}
@@ -520,7 +531,7 @@ function OrderDetailsOverlay({flight, search, adults, childrenCount, total, onCl
 
             <div className="border-t border-[color:var(--color-line-soft)] px-5 py-5">
               <p className="text-[11px] font-bold uppercase leading-none text-[color:var(--color-subtle)]">Delivery</p>
-              <p className="mt-4 text-sm font-semibold leading-tight text-[color:var(--color-primary)]">Instant</p>
+              <p className="mt-4 text-sm font-semibold leading-tight text-[color:var(--color-accent)]">Instant</p>
             </div>
 
             <div className="border-t border-[color:var(--color-line-soft)] px-5 py-5">
@@ -537,11 +548,11 @@ function OrderDetailsOverlay({flight, search, adults, childrenCount, total, onCl
               </div>
 
               <div className="mt-5">
-                <div className="mb-3 flex items-center gap-2 font-body text-base font-bold text-[color:var(--color-ink)]">
+                <div className="mb-3 flex items-center gap-2 font-body text-base font-semibold text-[color:var(--color-ink)]">
                   <Tag size={17} aria-hidden="true" />
                   Apply Coupon Code
                 </div>
-                <button type="button" className="flex h-11 w-full items-center justify-center gap-2 border border-[color:var(--color-primary)] bg-white font-body text-sm font-bold text-[color:var(--color-primary)]">
+                <button type="button" className="flex h-11 w-full items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-accent)] bg-white font-body text-sm font-semibold text-[color:var(--color-accent)] transition hover:bg-[color:var(--color-accent-soft)]">
                   <Tag size={16} aria-hidden="true" />
                   Apply Coupon Code
                 </button>
@@ -549,17 +560,17 @@ function OrderDetailsOverlay({flight, search, adults, childrenCount, total, onCl
 
               <div className="mt-7 flex items-center justify-between gap-4">
                 <span className="font-body text-xl font-bold text-[color:var(--color-ink)]">Total</span>
-                <span className="font-body text-xl font-bold text-[color:var(--color-primary)]">${total}</span>
+                <span className="font-body text-xl font-bold text-[color:var(--color-accent)]">${total}</span>
               </div>
             </div>
           </div>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <div className="flex min-h-12 items-center justify-center gap-2 border border-[color:var(--color-line)] bg-white px-3 text-sm font-semibold text-[color:var(--color-primary)]">
+            <div className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-card-premium-border)] bg-white px-3 text-sm font-semibold text-[color:var(--color-accent)]">
               <ShieldCheck size={20} className="text-[color:var(--color-accent)]" aria-hidden="true" />
               Secure Payment
             </div>
-            <div className="flex min-h-12 items-center justify-center gap-2 border border-[color:var(--color-line)] bg-white px-3 text-sm font-semibold text-[#5b50ff]">
+            <div className="flex min-h-12 items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-card-premium-border)] bg-white px-3 text-sm font-semibold text-[color:var(--color-accent)]">
               <LockKeyhole size={19} aria-hidden="true" />
               Stripe Verified
             </div>
@@ -574,13 +585,22 @@ function OrderDetailsOverlay({flight, search, adults, childrenCount, total, onCl
 }
 
 function PassengerDetailsStep({flight, search}) {
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const totalPassengers = adults + children;
-  const total = totalPassengers * 20;
-  const emailSuggestion = getEmailSuggestion(email);
+  const [travelerDetails, setTravelerDetails] = useState({
+    email: "",
+    primaryFirstName: "",
+    primaryLastName: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState(null);
+  const total = 20;
+  const emailSuggestion = getEmailSuggestion(travelerDetails.email);
+
+  useEffect(() => {
+    if (!toast) return undefined;
+    const id = window.setTimeout(() => setToast(null), 4000);
+    return () => window.clearTimeout(id);
+  }, [toast]);
 
   useEffect(() => {
     if (!orderDetailsOpen) return undefined;
@@ -591,10 +611,33 @@ function PassengerDetailsStep({flight, search}) {
     };
   }, [orderDetailsOpen]);
 
+  function setDetail(name, value) {
+    setTravelerDetails((current) => ({...current, [name]: value}));
+    if (errors[name]) setErrors((current) => ({...current, [name]: undefined}));
+  }
+
+  function validatePaymentDetails() {
+    const next = {};
+    if (!travelerDetails.email.trim()) next.email = "Please enter your email";
+    if (!travelerDetails.primaryFirstName.trim()) next.primaryFirstName = "Please enter your first name";
+    if (!travelerDetails.primaryLastName.trim()) next.primaryLastName = "Please enter your last name";
+
+    return next;
+  }
+
+  function handlePay() {
+    const next = validatePaymentDetails();
+    setErrors(next);
+    if (Object.keys(next).length > 0) {
+      setToast("Please complete all required traveler details before payment.");
+      return;
+    }
+  }
+
   return (
-    <section className="container-max pb-28 pt-7 sm:pt-10">
-      <div className="mx-auto grid w-full max-w-[560px] gap-7">
-        <div className="grid gap-4">
+    <section className="container-max pb-28 pt-7 sm:pt-12">
+      <div className="mx-auto grid w-full max-w-[1120px] gap-7 lg:min-h-[52vh] lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.78fr)] lg:items-center lg:gap-10">
+        <div className="grid gap-4 lg:max-w-[700px] lg:self-center">
           <ItinerarySummarySegment
             label="Onward"
             flight={flight.onward}
@@ -615,69 +658,53 @@ function PassengerDetailsStep({flight, search}) {
           ) : null}
         </div>
 
-        <div className="grid justify-items-center gap-4 py-1">
-          <PassengerCounter
-            label={passengerLabel(adults, "Adult", "Adults")}
-            value={adults}
-            min={1}
-            onChange={setAdults}
-          />
-          <PassengerCounter
-            label={passengerLabel(children, "Child", "Children")}
-            value={children}
-            min={0}
-            onChange={setChildren}
-          />
-        </div>
-
-        <div className="grid gap-5">
+        <div className="grid gap-5 lg:justify-self-end lg:w-full lg:max-w-[500px]">
           <TextField
             label="Email ID"
             placeholder="name@example.com"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            value={travelerDetails.email}
+            onChange={(event) => setDetail("email", event.target.value)}
+            error={errors.email}
           >
             {emailSuggestion ? (
               <button
                 type="button"
-                onClick={() => setEmail(emailSuggestion)}
-                className="mt-2 block text-left text-sm font-semibold text-[color:var(--color-accent)]"
+                onClick={() => setDetail("email", emailSuggestion)}
+                className="mt-2 block text-left text-sm font-semibold text-[color:var(--color-success)]"
               >
                 Did you mean: {emailSuggestion}
               </button>
             ) : null}
           </TextField>
-          <TextField label="Your First Name" />
-          <TextField label="Last Name" />
-
-          {Array.from({length: Math.max(0, adults - 1)}, (_, index) => (
-            <div key={`adult-${index + 2}`} className="grid gap-5 border-t border-[color:var(--color-line-soft)] pt-5">
-              <TextField label={`Adult ${index + 2}: First Name`} />
-              <TextField label={`Adult ${index + 2}: Last Name`} />
-            </div>
-          ))}
-
-          {Array.from({length: children}, (_, index) => (
-            <div key={`child-${index + 1}`} className="grid gap-5 border-t border-[color:var(--color-line-soft)] pt-5">
-              <TextField label={`Child ${index + 1}: First Name`} />
-              <TextField label={`Child ${index + 1}: Last Name`} />
-            </div>
-          ))}
+          <TextField
+            label="Your First Name"
+            placeholder="John"
+            value={travelerDetails.primaryFirstName}
+            onChange={(event) => setDetail("primaryFirstName", event.target.value)}
+            error={errors.primaryFirstName}
+          />
+          <TextField
+            label="Last Name"
+            placeholder="Doe"
+            value={travelerDetails.primaryLastName}
+            onChange={(event) => setDetail("primaryLastName", event.target.value)}
+            error={errors.primaryLastName}
+          />
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--color-line-soft)] bg-white">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[color:var(--color-line-soft)] bg-white/95 backdrop-blur">
         <div className="container-max flex min-h-20 items-center justify-between gap-4">
           <button
             type="button"
             onClick={() => setOrderDetailsOpen(true)}
-            className="inline-flex items-center gap-1 text-left text-sm font-semibold text-[color:var(--color-primary)]"
+            className="inline-flex items-center gap-1 text-left text-sm font-semibold text-[color:var(--color-accent)]"
           >
             Order details
             <ChevronUp size={15} aria-hidden="true" />
           </button>
-          <button type="button" className="btn-secondary min-h-12 w-auto px-7 py-3 text-base">
+          <button type="button" onClick={handlePay} className="btn-secondary min-h-12 w-auto px-7 py-3 text-base">
             Pay ${total}
           </button>
         </div>
@@ -687,11 +714,27 @@ function PassengerDetailsStep({flight, search}) {
         <OrderDetailsOverlay
           flight={flight}
           search={search}
-          adults={adults}
-          childrenCount={children}
           total={total}
           onClose={() => setOrderDetailsOpen(false)}
         />
+      ) : null}
+
+      {toast && typeof window !== "undefined" ? createPortal(
+        <div className="fixed right-5 top-5 z-[9999] max-w-sm animate-fade-in-up">
+          <div className="flex items-start gap-2 rounded-xl border border-[color:var(--color-warning)] bg-[color:var(--color-warning-soft)] px-4 py-3">
+            <AlertCircle size={16} className="mt-0.5 shrink-0 text-[color:var(--color-warning)]" />
+            <p className="flex-1 text-sm font-medium text-[color:var(--color-warning)]">{toast}</p>
+            <button
+              type="button"
+              onClick={() => setToast(null)}
+              className="shrink-0 text-[color:var(--color-text-muted-card)] hover:text-[color:var(--color-text-on-card)]"
+              aria-label="Dismiss"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>,
+        document.body
       ) : null}
     </section>
   );
@@ -773,7 +816,7 @@ export default function BookFlow() {
   }
 
   return (
-    <main className="starter-page bg-[color:var(--color-surface-muted)]">
+    <main className="starter-page booking-page">
       <ProgressSteps step={isBootingFromStoredSearch ? 2 : step} onBack={handleBack} />
 
       {isBootingFromStoredSearch ? <LoadingFlightList /> : null}

@@ -41,6 +41,20 @@ export default function Navbar({locale, messages}) {
           InstaDummyTicket
         </Link>
 
+        <div className="desktop-navbar__links" aria-label={messages.nav.mainLabel}>
+          {navItems.map((item) => {
+            const active = isActivePath(pathname, item.href)
+            return (
+              <Link key={item.href} className="desktop-navbar__link" data-active={active} href={item.href}>
+                {item.label}
+              </Link>
+            )
+          })}
+          <Link className="desktop-navbar__support" href={localizedPath(locale, '/support')}>
+            Support
+          </Link>
+        </div>
+
         <button
           className="mobile-navbar__toggle"
           type="button"

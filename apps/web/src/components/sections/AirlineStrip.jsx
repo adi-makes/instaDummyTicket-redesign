@@ -24,7 +24,7 @@ const track = [...airlines, ...airlines];
 
 export default function AirlineStrip() {
   return (
-    <section data-scroll-reveal className="airline-strip overflow-hidden bg-white py-6 md:py-6">
+    <section data-scroll-reveal className="airline-strip overflow-hidden border-t border-[color:var(--color-line-soft)] bg-white py-6 md:py-6">
       <div className="mb-5 flex items-center justify-center gap-3 px-4 md:mb-6">
         <span className="hidden h-px w-12 bg-gradient-to-r from-transparent to-accent-border sm:block sm:w-20" aria-hidden="true" />
         <p className="eyebrow !mb-0 whitespace-nowrap">
@@ -34,9 +34,8 @@ export default function AirlineStrip() {
       </div>
 
       <div className="relative flex w-full overflow-hidden select-none">
-        {/* fade edges */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-24 z-10 bg-gradient-to-r from-white to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-24 z-10 bg-gradient-to-l from-white to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent md:w-24" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent md:w-24" />
 
         <div className="animate-scroll whitespace-nowrap flex items-center w-max">
           {track.map((airline, idx) => (
